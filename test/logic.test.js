@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { topics, questions, sequences, cases } from '../data.js';
+import { topics, questions, sequences, cases, topicReferences } from '../data.js';
 import { normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from '../logic.js';
 
 test('cada bloque propuesto tiene al menos 50 preguntas distintas y válidas', () => {
@@ -17,7 +17,14 @@ test('cada bloque propuesto tiene al menos 50 preguntas distintas y válidas', (
     }
     assert.ok(sequences.some(e => e.topic === topic.id));
     assert.ok(cases.some(e => e.topic === topic.id));
+    assert.ok(topicReferences[topic.id]?.every(ref => ref.label && ref.url.startsWith('https://')));
   }
+});
+
+test('el tema oficial 46 tiene 50 preguntas originales con fuentes enlazadas', () => {
+  const bank = questions.filter(question => question.topic === 'tema-46');
+  assert.equal(bank.length, 50);
+  assert.ok(bank.every(question => question.source.startsWith('https://')));
 });
 
 test('filtra, mezcla sin modificar el original y corrige blancos', () => {

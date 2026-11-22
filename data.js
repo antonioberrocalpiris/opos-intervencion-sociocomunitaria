@@ -1,4 +1,12 @@
 import { lawTopic, lawQuestions } from './legislacion-bank.js';
+import { topic46, questions46 } from './tema46-bank.js';
+
+export const topicReferences = {
+  diagnostico: [{ label: 'Currículo de Integración Social: contexto y metodología de la intervención (referencia contextual)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2012-10866' }],
+  inclusion: [{ label: 'Currículo de Integración Social y apoyos a la autonomía (referencia contextual)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2012-10866' }, { label: 'Ley General de derechos de las personas con discapacidad', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2013-12632' }],
+  legislacion: [{ label: 'Ley Orgánica 3/2022 de Formación Profesional', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2022-5139' }, { label: 'Real Decreto 659/2023 de ordenación de la FP', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2023-16889' }],
+  'tema-46': [{ label: 'Tema 46 del programa oficial', url: 'https://www.boe.es/boe/dias/1996/02/13/pdfs/C00001-00096.pdf#page=17' }, { label: 'Real Decreto 95/2022 de Educación Infantil', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2022-1654' }, { label: 'Indicadores de desarrollo infantil · CDC', url: 'https://www.cdc.gov/act-early/milestones/index.html' }, { label: 'Título de FP en Educación Infantil · módulo 0015', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2007-20201' }]
+};
 
 // Bloques de estudio propios; no equivalen a los epígrafes del programa oficial.
 const blocks = [
@@ -118,7 +126,7 @@ const blocks = [
   }
 ];
 
-export const topics = [...blocks.map(({ id, title, intro }) => ({ id, title, intro, origin: 'propuesto' })), lawTopic];
+export const topics = [...blocks.map(({ id, title, intro }) => ({ id, title, intro, origin: 'propuesto' })), lawTopic, topic46];
 export const guides = {
   diagnostico: [
     ['Escuchar antes de diseñar', 'Delimita el territorio o colectivo, identifica a las personas afectadas y combina datos existentes con entrevistas, observación y espacios participativos. Pregunta también quién no está siendo escuchado.'],
@@ -140,6 +148,13 @@ export const guides = {
     ['Del título al aula', 'Consulta el real decreto consolidado del título, su atribución docente y la contextualización curricular de Extremadura. Localiza los resultados de aprendizaje y criterios del módulo que vas a programar.'],
     ['Acceso docente', 'El Real Decreto 276/2007 establece el marco de ingreso; la convocatoria y las instrucciones aplicables concretan el proceso. Las cifras de una convocatoria anterior no son reglas para todas las posteriores.'],
     ['Comprueba siempre la fuente', 'Identifica norma, ámbito, fecha y versión consolidada; comprueba las modificaciones antes de citar un artículo o aplicarlo a un supuesto.']
+  ],
+  'tema-46': [
+    ['Desarrollo psicomotor y evolución', 'Define el desarrollo como proceso integral y presenta las adquisiciones hasta los seis años como orientativas, con variabilidad individual.'],
+    ['Factores, cuerpo y lateralidad', 'Relaciona las oportunidades de experiencia con el entorno y la maduración; aborda el esquema corporal y acompaña la preferencia lateral sin forzarla.'],
+    ['Estrategias y recursos', 'Selecciona juego, movimiento, observación y adaptaciones para participar con seguridad; coordina con las familias y el equipo.'],
+    ['Currículo y reeducación', 'Sitúa el currículo estatal y extremeño de Infantil. Distingue la labor educativa de la valoración e intervención de profesionales competentes.'],
+    ['Conexión con FP', 'Vincula la propuesta a resultados de aprendizaje y criterios del módulo 0015 Desarrollo cognitivo y motor del título de Educación Infantil.']
   ]
 };
 export const questions = [...blocks.flatMap(block => block.concepts.map(([term, definition], index) => {
@@ -153,19 +168,21 @@ export const questions = [...blocks.flatMap(block => block.concepts.map(([term, 
     explanation: `${term}: ${definition}`,
     source: 'Material original de repaso; contrasta los conceptos con bibliografía especializada.'
   };
-})), ...lawQuestions];
+})), ...lawQuestions, ...questions46];
 
 export const sequences = [
   { topic: 'diagnostico', title: 'Diseñar una intervención', steps: ['Conocer el contexto y escuchar a la comunidad', 'Priorizar necesidades con criterios explícitos', 'Definir objetivos e indicadores', 'Planificar actividades y recursos', 'Evaluar y devolver los resultados'], hint: 'Comienza escuchando y termina aprendiendo de los resultados.' },
   { topic: 'diagnostico', title: 'Preparar una entrevista', steps: ['Definir qué información se necesita', 'Elaborar un guion flexible', 'Informar y solicitar consentimiento', 'Escuchar y registrar de forma acordada', 'Analizar y contrastar la información'], hint: 'Antes de preguntar hay que tener un propósito y acordar cómo participar.' },
   { topic: 'inclusion', title: 'Reducir barreras de participación', steps: ['Escuchar a las personas implicadas', 'Identificar barreras del entorno', 'Acordar apoyos y alternativas accesibles', 'Poner en práctica las medidas', 'Revisar si la participación mejora'], hint: 'No presupongas las necesidades: pregunta primero.' },
   { topic: 'inclusion', title: 'Acompañar un conflicto', steps: ['Crear un espacio seguro para el diálogo', 'Escuchar las perspectivas de las partes', 'Identificar necesidades e intereses', 'Explorar alternativas y acuerdos', 'Revisar el cumplimiento de lo acordado'], hint: 'Escuchar precede a buscar soluciones.' },
-  { topic: 'legislacion', title: 'Preparar una referencia curricular de FP', steps: ['Identificar el ciclo y el módulo que se quiere programar', 'Consultar el real decreto consolidado del título y su atribución docente', 'Revisar la contextualización curricular vigente de Extremadura', 'Localizar los resultados de aprendizaje y criterios del módulo', 'Diseñar actividades y evaluación coherentes con esos elementos'], hint: 'Primero identifica el módulo; después contrasta las fuentes antes de diseñar.' }
+  { topic: 'legislacion', title: 'Preparar una referencia curricular de FP', steps: ['Identificar el ciclo y el módulo que se quiere programar', 'Consultar el real decreto consolidado del título y su atribución docente', 'Revisar la contextualización curricular vigente de Extremadura', 'Localizar los resultados de aprendizaje y criterios del módulo', 'Diseñar actividades y evaluación coherentes con esos elementos'], hint: 'Primero identifica el módulo; después contrasta las fuentes antes de diseñar.' },
+  { topic: 'tema-46', title: 'Planificar una propuesta motriz inclusiva', steps: ['Observar el contexto y las posibilidades del grupo', 'Definir una finalidad educativa y una actividad de juego', 'Preparar el espacio, materiales y alternativas accesibles', 'Acompañar la exploración observando sin forzar', 'Registrar y revisar la participación para ajustar la propuesta'], hint: 'Conoce primero al grupo y revisa al final qué ha funcionado.' }
 ];
 
 export const cases = [
   { topic: 'diagnostico', title: 'Un barrio con poca participación', text: 'Una asociación propone talleres para jóvenes, pero apenas conoce sus intereses y la asistencia previa ha sido baja.', prompt: '¿Qué harías primero y cómo incorporarías las voces menos representadas?', guide: ['Escuchar a jóvenes en espacios y horarios accesibles.', 'Contrastar sus necesidades con datos y recursos existentes.', 'Acordar prioridades y diseñar actividades con participación real.', 'Definir indicadores y revisar asistencia y experiencia.'] },
   { topic: 'inclusion', title: 'Una actividad con barreras', text: 'Una persona quiere participar en un taller, pero el local y los materiales presentan barreras de acceso.', prompt: '¿Cómo responderías respetando su autonomía?', guide: ['Preguntar a la persona qué barreras y apoyos identifica.', 'Buscar un espacio y materiales accesibles y acordar ajustes.', 'Coordinar los recursos necesarios sin divulgar datos innecesarios.', 'Revisar con la persona si las medidas funcionan.'] },
   { topic: 'inclusion', title: 'Desacuerdo en un grupo', text: 'Dos participantes interrumpen repetidamente el trabajo por un conflicto previo y el resto deja de intervenir.', prompt: '¿Cómo cuidarías al grupo y abordarías el conflicto?', guide: ['Establecer un espacio seguro y normas de respeto.', 'Escuchar a las partes sin tomar partido ni forzar una mediación.', 'Explorar necesidades, alternativas y acuerdos voluntarios.', 'Hacer seguimiento y acudir a protocolos aplicables si existe riesgo.'] },
-  { topic: 'legislacion', title: 'Una programación desactualizada', text: 'Una compañera comparte una programación antigua de un ciclo de FP, anterior a la nueva ordenación. Quieres utilizarla solo como punto de partida.', prompt: '¿Qué fuentes contrastarías y cómo revisarías su aplicación al módulo?', guide: ['Consultar la ordenación actual del sistema de FP y las disposiciones transitorias aplicables.', 'Comprobar el texto consolidado del título y la atribución docente del módulo.', 'Consultar el currículo y las instrucciones extremeñas vigentes para el curso y modalidad.', 'Revisar resultados de aprendizaje, criterios, evaluación y formación en empresa.', 'Registrar las fuentes y fechas consultadas antes de defender la propuesta.'] }
+  { topic: 'legislacion', title: 'Una programación desactualizada', text: 'Una compañera comparte una programación antigua de un ciclo de FP, anterior a la nueva ordenación. Quieres utilizarla solo como punto de partida.', prompt: '¿Qué fuentes contrastarías y cómo revisarías su aplicación al módulo?', guide: ['Consultar la ordenación actual del sistema de FP y las disposiciones transitorias aplicables.', 'Comprobar el texto consolidado del título y la atribución docente del módulo.', 'Consultar el currículo y las instrucciones extremeñas vigentes para el curso y modalidad.', 'Revisar resultados de aprendizaje, criterios, evaluación y formación en empresa.', 'Registrar las fuentes y fechas consultadas antes de defender la propuesta.'] },
+  { topic: 'tema-46', title: 'Un circuito con apoyos', text: 'En una actividad motriz del primer ciclo, una niña necesita más tiempo y apoyo para participar en un recorrido.', prompt: '¿Cómo adaptarías la propuesta y qué observarías sin convertir la diferencia en diagnóstico?', guide: ['Ajustar recorrido y materiales, ofreciendo alternativas seguras.', 'Observar la participación en distintos momentos y anotar apoyos y contexto.', 'Coordinar con familia y equipo; consultar profesionales competentes si hay preocupación persistente.', 'Vincular la propuesta formativa al módulo 0015 y sus criterios, si se plantea para el alumnado de FP.'] }
 ];

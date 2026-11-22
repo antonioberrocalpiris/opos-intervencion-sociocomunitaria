@@ -1,4 +1,4 @@
-import { topics, questions, guides, sequences, cases } from './data.js?v=2';
+import { topics, questions, guides, sequences, cases, topicReferences } from './data.js?v=3';
 import { filterCycles, filterLaws, normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js?v=5';
 import { legislation, stages } from './oposicion.js?v=5';
 import { cycles } from './ciclos.js?v=3';
@@ -49,6 +49,26 @@ function sourceElement(source) {
     return link;
   }
   return make('small', source);
+}
+function referenceElements(topic) {
+  const refs = topicReferences[topic] || [];
+  if (!refs.length) return make('p', 'Material propio: la fuente debe proporcionarla quien lo importe.', 'muted');
+  const group = make('div', null, 'source-list');
+  group.append(make('p', 'Referencias para contextualizar y contrastar; las actividades y esquemas son propuestas originales.', 'muted'));
+  for (const ref of refs) {
+    const link = make('a', `${ref.label} ↗`);
+    link.href = ref.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    group.append(link);
+  }
+  return group;
+}
+function questionSources(q) {
+  const group = make('div');
+  group.append(sourceElement(q.source));
+  if (!q.source.startsWith('https://')) group.append(referenceElements(q.topic));
+  return group;
 }
 
 function refreshFilters() {
@@ -139,7 +159,7 @@ function answer(choice) {
   $('next').textContent = quiz.index === quiz.items.length - 1 ? 'Ver resultados →' : 'Siguiente →';
   if (quiz.mode === 'practice') {
     $('feedback').append(make('strong', choice == null ? 'En blanco' : choice === q.answer ? '¡Bien hecho!' : 'Una oportunidad para aprender'));
-    $('feedback').append(make('p', `Respuesta: ${q.options[q.answer]}`), make('p', q.explanation), sourceElement(q.source));
+    $('feedback').append(make('p', `Respuesta: ${q.options[q.answer]}`), make('p', q.explanation), questionSources(q));
     $('feedback').hidden = false;
   }
 }
@@ -158,7 +178,7 @@ function finishQuiz() {
     const details = make('details');
     const choice = quiz.answers[q.id];
     details.append(make('summary', `${choice == null ? 'En blanco' : choice === q.answer ? 'Correcta' : 'Para repasar'} · ${q.prompt}`));
-    details.append(make('p', `Tu respuesta: ${choice == null ? 'En blanco' : q.options[choice]}`), make('p', `Respuesta propuesta: ${q.options[q.answer]}`), make('p', q.explanation), sourceElement(q.source));
+    details.append(make('p', `Tu respuesta: ${choice == null ? 'En blanco' : q.options[choice]}`), make('p', `Respuesta propuesta: ${q.options[q.answer]}`), make('p', q.explanation), questionSources(q));
     results.append(details);
   }
   results.hidden = false;
@@ -206,7 +226,7 @@ function renderExercises() {
     const correct = make('ol');
     exercise.steps.forEach(step => correct.append(make('li', step)));
     solution.append(correct);
-    card.append(check, status, solution); $('sequence-list').append(card);
+    card.append(check, status, solution, referenceElements(exercise.topic)); $('sequence-list').append(card);
   }
   for (const exercise of cases.filter(e => filter === 'all' || e.topic === filter)) {
     const card = make('article', null, 'card exercise-card');
@@ -217,7 +237,7 @@ function renderExercises() {
     const details = make('details'); details.append(make('summary', 'Ver guía de reflexión'));
     const list = make('ul');
     exercise.guide.forEach(item => list.append(make('li', item)));
-    details.append(list); card.append(details); $('case-list').append(card);
+    details.append(list); card.append(details, referenceElements(exercise.topic)); $('case-list').append(card);
   }
 }
 $('exercise-filter').addEventListener('change', renderExercises);
@@ -234,7 +254,7 @@ function renderLibrary() {
   for (const topic of matches) {
     const item = personal.find(p => p.id === topic.id);
     const card = make('article', null, 'card library-card');
-    card.append(make('p', topic.origin === 'propio' ? 'MATERIAL PROPIO' : 'BLOQUE PROPUESTO', 'eyebrow'), make('h3', topic.title), make('p', topic.intro));
+    card.append(make('p', topic.origin === 'propio' ? 'MATERIAL PROPIO' : topic.origin === 'tema oficial' ? 'TEMA OFICIAL' : 'BLOQUE PROPUESTO', 'eyebrow'), make('h3', topic.title), make('p', topic.intro));
     const count = allQuestions().filter(q => q.topic === topic.id).length;
     card.append(make('p', `${count} preguntas disponibles${count < 50 ? ' · aún no alcanza 50 preguntas' : ''}`, 'muted'));
     if (guides[topic.id]) {
@@ -244,6 +264,7 @@ function renderLibrary() {
         details.append(make('h4', heading), make('p', text));
       }
       card.append(details);
+      card.append(referenceElements(topic.id));
     }
     if (item?.notes) {
       const details = make('details');
@@ -288,8 +309,9 @@ $('import').addEventListener('click', async () => {
 
 for (const topic of topics) {
   const card = make('article', null, 'card');
-  card.append(make('p', 'BLOQUE PROPUESTO', 'eyebrow'), make('h3', topic.title), make('p', topic.intro));
+  card.append(make('p', topic.origin === 'tema oficial' ? 'TEMA OFICIAL' : 'BLOQUE PROPUESTO', 'eyebrow'), make('h3', topic.title), make('p', topic.intro));
   for (const [heading, text] of guides[topic.id] || []) card.append(make('h4', heading), make('p', text));
+  card.append(referenceElements(topic.id));
   $('study-list').append(card);
 }
 
