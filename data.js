@@ -1,3 +1,5 @@
+import { lawTopic, lawQuestions } from './legislacion-bank.js';
+
 // Bloques de estudio propios; no equivalen a los epígrafes del programa oficial.
 const blocks = [
   {
@@ -116,7 +118,7 @@ const blocks = [
   }
 ];
 
-export const topics = blocks.map(({ id, title, intro }) => ({ id, title, intro, origin: 'propuesto' }));
+export const topics = [...blocks.map(({ id, title, intro }) => ({ id, title, intro, origin: 'propuesto' })), lawTopic];
 export const guides = {
   diagnostico: [
     ['Escuchar antes de diseñar', 'Delimita el territorio o colectivo, identifica a las personas afectadas y combina datos existentes con entrevistas, observación y espacios participativos. Pregunta también quién no está siendo escuchado.'],
@@ -131,9 +133,16 @@ export const guides = {
     ['Trabajar con el entorno', 'Coordina recursos y agentes con objetivos claros, cuidando el consentimiento y la confidencialidad. La red complementa, pero no reemplaza, la voz de las personas implicadas.'],
     ['Educar para la participación', 'Propón actividades cooperativas con papeles y apoyos diversos. Revisa estereotipos, cuida la convivencia y evalúa no solo la asistencia, sino también la posibilidad real de decidir y contribuir.'],
     ['Pregunta para desarrollar', 'Diseña una actividad comunitaria accesible e intercultural: identifica barreras, apoyos, agentes, criterios de evaluación y cómo participarán las personas destinatarias.']
+  ],
+  legislacion: [
+    ['Marco general y autonómico', 'Sitúa la LOE en su texto consolidado y la Ley de educación de Extremadura. Después concreta la regulación específica de formación profesional.'],
+    ['Sistema de formación profesional', 'Distingue la Ley Orgánica 3/2022, que ordena e integra el sistema, y el Real Decreto 659/2023, que lo desarrolla. No confundas grados de oferta con cursos académicos.'],
+    ['Del título al aula', 'Consulta el real decreto consolidado del título, su atribución docente y la contextualización curricular de Extremadura. Localiza los resultados de aprendizaje y criterios del módulo que vas a programar.'],
+    ['Acceso docente', 'El Real Decreto 276/2007 establece el marco de ingreso; la convocatoria y las instrucciones aplicables concretan el proceso. Las cifras de una convocatoria anterior no son reglas para todas las posteriores.'],
+    ['Comprueba siempre la fuente', 'Identifica norma, ámbito, fecha y versión consolidada; comprueba las modificaciones antes de citar un artículo o aplicarlo a un supuesto.']
   ]
 };
-export const questions = blocks.flatMap(block => block.concepts.map(([term, definition], index) => {
+export const questions = [...blocks.flatMap(block => block.concepts.map(([term, definition], index) => {
   const distractors = [1, 7, 19].map(offset => block.concepts[(index + offset) % block.concepts.length][1]);
   return {
     id: `${block.id}-${index + 1}`,
@@ -144,17 +153,19 @@ export const questions = blocks.flatMap(block => block.concepts.map(([term, defi
     explanation: `${term}: ${definition}`,
     source: 'Material original de repaso; contrasta los conceptos con bibliografía especializada.'
   };
-}));
+})), ...lawQuestions];
 
 export const sequences = [
   { topic: 'diagnostico', title: 'Diseñar una intervención', steps: ['Conocer el contexto y escuchar a la comunidad', 'Priorizar necesidades con criterios explícitos', 'Definir objetivos e indicadores', 'Planificar actividades y recursos', 'Evaluar y devolver los resultados'], hint: 'Comienza escuchando y termina aprendiendo de los resultados.' },
   { topic: 'diagnostico', title: 'Preparar una entrevista', steps: ['Definir qué información se necesita', 'Elaborar un guion flexible', 'Informar y solicitar consentimiento', 'Escuchar y registrar de forma acordada', 'Analizar y contrastar la información'], hint: 'Antes de preguntar hay que tener un propósito y acordar cómo participar.' },
   { topic: 'inclusion', title: 'Reducir barreras de participación', steps: ['Escuchar a las personas implicadas', 'Identificar barreras del entorno', 'Acordar apoyos y alternativas accesibles', 'Poner en práctica las medidas', 'Revisar si la participación mejora'], hint: 'No presupongas las necesidades: pregunta primero.' },
-  { topic: 'inclusion', title: 'Acompañar un conflicto', steps: ['Crear un espacio seguro para el diálogo', 'Escuchar las perspectivas de las partes', 'Identificar necesidades e intereses', 'Explorar alternativas y acuerdos', 'Revisar el cumplimiento de lo acordado'], hint: 'Escuchar precede a buscar soluciones.' }
+  { topic: 'inclusion', title: 'Acompañar un conflicto', steps: ['Crear un espacio seguro para el diálogo', 'Escuchar las perspectivas de las partes', 'Identificar necesidades e intereses', 'Explorar alternativas y acuerdos', 'Revisar el cumplimiento de lo acordado'], hint: 'Escuchar precede a buscar soluciones.' },
+  { topic: 'legislacion', title: 'Preparar una referencia curricular de FP', steps: ['Identificar el ciclo y el módulo que se quiere programar', 'Consultar el real decreto consolidado del título y su atribución docente', 'Revisar la contextualización curricular vigente de Extremadura', 'Localizar los resultados de aprendizaje y criterios del módulo', 'Diseñar actividades y evaluación coherentes con esos elementos'], hint: 'Primero identifica el módulo; después contrasta las fuentes antes de diseñar.' }
 ];
 
 export const cases = [
   { topic: 'diagnostico', title: 'Un barrio con poca participación', text: 'Una asociación propone talleres para jóvenes, pero apenas conoce sus intereses y la asistencia previa ha sido baja.', prompt: '¿Qué harías primero y cómo incorporarías las voces menos representadas?', guide: ['Escuchar a jóvenes en espacios y horarios accesibles.', 'Contrastar sus necesidades con datos y recursos existentes.', 'Acordar prioridades y diseñar actividades con participación real.', 'Definir indicadores y revisar asistencia y experiencia.'] },
   { topic: 'inclusion', title: 'Una actividad con barreras', text: 'Una persona quiere participar en un taller, pero el local y los materiales presentan barreras de acceso.', prompt: '¿Cómo responderías respetando su autonomía?', guide: ['Preguntar a la persona qué barreras y apoyos identifica.', 'Buscar un espacio y materiales accesibles y acordar ajustes.', 'Coordinar los recursos necesarios sin divulgar datos innecesarios.', 'Revisar con la persona si las medidas funcionan.'] },
-  { topic: 'inclusion', title: 'Desacuerdo en un grupo', text: 'Dos participantes interrumpen repetidamente el trabajo por un conflicto previo y el resto deja de intervenir.', prompt: '¿Cómo cuidarías al grupo y abordarías el conflicto?', guide: ['Establecer un espacio seguro y normas de respeto.', 'Escuchar a las partes sin tomar partido ni forzar una mediación.', 'Explorar necesidades, alternativas y acuerdos voluntarios.', 'Hacer seguimiento y acudir a protocolos aplicables si existe riesgo.'] }
+  { topic: 'inclusion', title: 'Desacuerdo en un grupo', text: 'Dos participantes interrumpen repetidamente el trabajo por un conflicto previo y el resto deja de intervenir.', prompt: '¿Cómo cuidarías al grupo y abordarías el conflicto?', guide: ['Establecer un espacio seguro y normas de respeto.', 'Escuchar a las partes sin tomar partido ni forzar una mediación.', 'Explorar necesidades, alternativas y acuerdos voluntarios.', 'Hacer seguimiento y acudir a protocolos aplicables si existe riesgo.'] },
+  { topic: 'legislacion', title: 'Una programación desactualizada', text: 'Una compañera comparte una programación antigua de un ciclo de FP, anterior a la nueva ordenación. Quieres utilizarla solo como punto de partida.', prompt: '¿Qué fuentes contrastarías y cómo revisarías su aplicación al módulo?', guide: ['Consultar la ordenación actual del sistema de FP y las disposiciones transitorias aplicables.', 'Comprobar el texto consolidado del título y la atribución docente del módulo.', 'Consultar el currículo y las instrucciones extremeñas vigentes para el curso y modalidad.', 'Revisar resultados de aprendizaje, criterios, evaluación y formación en empresa.', 'Registrar las fuentes y fechas consultadas antes de defender la propuesta.'] }
 ];

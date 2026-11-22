@@ -1,5 +1,7 @@
-import { topics, questions, guides, sequences, cases } from './data.js';
+import { topics, questions, guides, sequences, cases } from './data.js?v=2';
 import { normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js';
+import { legislation, stages } from './oposicion.js';
+import { cycles } from './ciclos.js';
 
 const $ = id => document.getElementById(id);
 const make = (tag, text, className) => {
@@ -20,6 +22,8 @@ try {
   if (new Set(personal.map(item => item.id)).size !== personal.length) throw new Error('Hay identificadores duplicados.');
 } catch (error) {
   $('import-status').textContent = `No se ha podido cargar la biblioteca: ${error.message}. No se ha modificado el almacenamiento.`;
+  $('storage-warning').textContent = $('import-status').textContent;
+  $('storage-warning').hidden = false;
 }
 let storageSafe = !$('import-status').textContent;
 function savePersonal(next) {
@@ -35,6 +39,16 @@ function allQuestions() {
   return [...questions, ...personal.flatMap(item => item.questions.map((q, index) => ({ ...q, id: `${item.id}-${index}`, topic: item.id })))];
 }
 function topicTitle(id) { return allTopics().find(topic => topic.id === id)?.title || 'Tema no disponible'; }
+function sourceElement(source) {
+  if (source.startsWith('https://')) {
+    const link = make('a', 'Consultar fuente oficial ↗');
+    link.href = source;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    return link;
+  }
+  return make('small', source);
+}
 
 function refreshFilters() {
   for (const id of ['topic-filter', 'exercise-filter']) {
@@ -119,7 +133,7 @@ function answer(choice) {
   $('next').textContent = quiz.index === quiz.items.length - 1 ? 'Ver resultados →' : 'Siguiente →';
   if (quiz.mode === 'practice') {
     $('feedback').append(make('strong', choice == null ? 'En blanco' : choice === q.answer ? '¡Bien hecho!' : 'Una oportunidad para aprender'));
-    $('feedback').append(make('p', `Respuesta: ${q.options[q.answer]}`), make('p', q.explanation), make('small', q.source));
+    $('feedback').append(make('p', `Respuesta: ${q.options[q.answer]}`), make('p', q.explanation), sourceElement(q.source));
     $('feedback').hidden = false;
   }
 }
@@ -138,7 +152,7 @@ function finishQuiz() {
     const details = make('details');
     const choice = quiz.answers[q.id];
     details.append(make('summary', `${choice == null ? 'En blanco' : choice === q.answer ? 'Correcta' : 'Para repasar'} · ${q.prompt}`));
-    details.append(make('p', `Tu respuesta: ${choice == null ? 'En blanco' : q.options[choice]}`), make('p', `Respuesta propuesta: ${q.options[q.answer]}`), make('p', q.explanation), make('small', q.source));
+    details.append(make('p', `Tu respuesta: ${choice == null ? 'En blanco' : q.options[choice]}`), make('p', `Respuesta propuesta: ${q.options[q.answer]}`), make('p', q.explanation), sourceElement(q.source));
     results.append(details);
   }
   results.hidden = false;
@@ -265,6 +279,120 @@ $('import').addEventListener('click', async () => {
     refreshAll();
   } catch (error) { $('import-status').textContent = error.message; }
 });
+
+for (const topic of topics) {
+  const card = make('article', null, 'card');
+  card.append(make('p', 'BLOQUE PROPUESTO', 'eyebrow'), make('h3', topic.title), make('p', topic.intro));
+  for (const [heading, text] of guides[topic.id] || []) card.append(make('h4', heading), make('p', text));
+  $('study-list').append(card);
+}
+
+for (const area of new Set(legislation.map(law => law.area))) {
+  const option = make('option', area);
+  option.value = area;
+  $('law-filter').append(option);
+}
+function renderLaws() {
+  $('law-list').replaceChildren();
+  for (const law of legislation.filter(item => $('law-filter').value === 'all' || item.area === $('law-filter').value)) {
+    const card = make('article', null, 'card source-list');
+    const link = make('a', 'Abrir fuente oficial ↗');
+    link.href = law.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    card.append(make('p', law.area, 'eyebrow'), make('h3', law.title), make('p', law.summary), make('p', `Para preparar la oposición: ${law.application}`), link);
+    if (law.extra) {
+      const extra = make('a', law.extra.text + ' ↗');
+      extra.href = law.extra.url; extra.target = '_blank'; extra.rel = 'noopener noreferrer';
+      card.append(make('p'), extra);
+    }
+    $('law-list').append(card);
+  }
+}
+$('law-filter').addEventListener('change', renderLaws);
+renderLaws();
+
+function renderCycles() {
+  const query = normalizeSearch($('cycle-search').value.trim());
+  const matches = cycles.filter(cycle => normalizeSearch(`${cycle.title} ${cycle.grade} ${cycle.modules.map(module => `${module.name} ${module.course}`).join(' ')}`).includes(query));
+  $('cycle-list').replaceChildren();
+  if (!matches.length) $('cycle-list').append(make('p', 'No se han encontrado ciclos con ese texto.', 'muted'));
+  for (const cycle of matches) {
+    const card = make('article', null, 'card source-list');
+    card.append(make('p', cycle.grade, 'eyebrow'), make('h3', cycle.title), make('p', cycle.note));
+    const list = make('ul', null, 'cycle-modules');
+    for (const module of cycle.modules) list.append(make('li', `${module.name} — ${module.course}`));
+    card.append(make('strong', 'Módulos identificados para contrastar en el anexo de profesorado'), list);
+    for (const source of cycle.sources) {
+      const link = make('a', source.title + ' ↗');
+      link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      const row = make('p'); row.append(link); card.append(row);
+    }
+    $('cycle-list').append(card);
+  }
+}
+$('cycle-search').addEventListener('input', renderCycles);
+renderCycles();
+
+const stageSelect = $('stage-select');
+for (const stage of stages) {
+  const option = make('option', stage.title);
+  option.value = stage.id; stageSelect.append(option);
+}
+let promptIndex = 0;
+let interval = null;
+let deadline = null;
+function stopTimer() {
+  if (interval !== null) clearInterval(interval);
+  interval = null;
+  deadline = null;
+}
+function showStage() {
+  stopTimer();
+  const stage = stages.find(item => item.id === stageSelect.value);
+  $('stage-title').textContent = stage.title;
+  $('stage-description').textContent = stage.description;
+  $('stage-minutes').value = stage.minutes;
+  $('stage-timer').textContent = '00:00';
+  $('timer-status').textContent = 'El tiempo es orientativo y puede ajustarse.';
+  $('stage-prompt').textContent = stage.prompts[promptIndex];
+  $('stage-checklist').replaceChildren();
+  for (const text of stage.checklist) {
+    const label = make('label', null, 'check-item');
+    const input = make('input'); input.type = 'checkbox';
+    label.append(input, document.createTextNode(text));
+    $('stage-checklist').append(label);
+  }
+}
+stageSelect.addEventListener('change', () => { promptIndex = 0; showStage(); });
+$('stage-new').addEventListener('click', () => {
+  const stage = stages.find(item => item.id === stageSelect.value);
+  promptIndex = (promptIndex + 1) % stage.prompts.length;
+  $('stage-prompt').textContent = stage.prompts[promptIndex];
+});
+function updateTimer() {
+  const remaining = Math.max(0, Math.ceil((deadline - Date.now()) / 1000));
+  $('stage-timer').textContent = `${String(Math.floor(remaining / 60)).padStart(2, '0')}:${String(remaining % 60).padStart(2, '0')}`;
+  if (remaining === 0) {
+    stopTimer();
+    $('timer-status').textContent = 'Tiempo terminado. Revisa tu trabajo con calma.';
+  }
+}
+$('timer-start').addEventListener('click', () => {
+  const minutes = Number($('stage-minutes').value);
+  if (!Number.isInteger(minutes) || minutes < 1 || minutes > 240) {
+    $('timer-status').textContent = 'Introduce un número entero de minutos entre 1 y 240.';
+    return;
+  }
+  stopTimer();
+  deadline = Date.now() + minutes * 60_000;
+  $('timer-status').textContent = 'Reloj en marcha. El borrador no se guarda al recargar.';
+  updateTimer();
+  interval = setInterval(updateTimer, 1000);
+});
+$('timer-stop').addEventListener('click', () => {
+  stopTimer();
+  $('timer-status').textContent = 'Reloj detenido. Al iniciarlo de nuevo empieza desde el tiempo indicado.';
+});
+showStage();
 $('export').addEventListener('click', () => {
   if (!storageSafe) { $('backup-status').textContent = 'La biblioteca no se ha podido leer; no se puede exportar una copia fiable.'; return; }
   const blob = new Blob([JSON.stringify({ version: 1, topics: personal }, null, 2)], { type: 'application/json' });

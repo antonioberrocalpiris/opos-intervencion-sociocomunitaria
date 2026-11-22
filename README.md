@@ -16,14 +16,17 @@ La pantalla de acceso solicita la clave compartida, distinguiendo mayúsculas y 
 
 ## Qué incluye
 
-- Dos **bloques propuestos**, no epígrafes oficiales: diagnóstico y planificación; inclusión, diversidad y acción educativa. Cada uno incluye un esquema breve y 50 preguntas originales de reconocimiento conceptual, con cuatro opciones y explicación. Son una primera base de repaso, no un desarrollo exhaustivo de la oposición.
+- Tres **bloques propuestos**, no epígrafes oficiales: diagnóstico y planificación; inclusión, diversidad y acción educativa; e identificación de legislación educativa y FP. Cada uno incluye un esquema breve y 50 preguntas originales con cuatro opciones y explicación. El bloque legislativo es de identificación básica de fuentes, no un examen exhaustivo por artículos.
 - Práctica filtrada por bloque, con corrección inmediata o al final y revisión de aciertos, errores y blancos. No hay penalización, cronómetro ni nota oficial; las preguntas no respondidas cuentan como blancas.
-- Cuatro ejercicios de ordenación con pista y solución orientativa y tres supuestos abiertos con guía de reflexión. El texto escrito en los supuestos no se guarda.
-- Biblioteca con búsqueda sin distinguir mayúsculas ni tildes en títulos y apuntes, importación de material personal y copia de seguridad.
+- Cinco ejercicios de ordenación con pista y solución orientativa y cuatro supuestos abiertos con guía de reflexión. El texto escrito en los supuestos no se guarda.
+- Entrenamiento de tema escrito, supuesto práctico, programación, unidad, preguntas del tribunal, revisión de méritos y fase de prácticas. Incluye propuestas, reloj ajustable, borrador temporal y listas de autoevaluación. Los tiempos se basan en la referencia indicada o son orientativos, y deben contrastarse con la convocatoria que corresponda.
+- Fichas de legislación, ocho títulos y currículo; enlazan fuentes oficiales y deben contrastarse con la versión vigente y el curso aplicable. Los módulos son una selección identificada, no un listado exhaustivo; especialmente hay que revisar transversales, atribuciones compartidas y otras ofertas. Las distribuciones por curso indicadas proceden de currículos anteriores y no se ha confirmado su adaptación actual. No se han localizado el currículo extremeño ni la oferta de Servicios Funerarios y de Formación para la Movilidad Segura y Sostenible.
 
 ## Añadir temas propios
 
-En «Mis temas» selecciona un TXT y escribe su título. Se guarda como apuntes buscables; **no se generan preguntas automáticamente**. También puedes importar un JSON UTF-8 con la estructura siguiente:
+La sección de importación personal está oculta a petición del usuario, pero no se borran los materiales guardados previamente, que permanecen en el mismo navegador y pueden seguir apareciendo en los filtros si tienen preguntas. Los siguientes contenidos se incorporarán al proyecto y su banco de preguntas cuando se faciliten. La funcionalidad de importación se mantiene en el código para una posible recuperación posterior; no está disponible en la navegación actual.
+
+Como referencia para una posible recuperación, el formato de importación JSON UTF-8 era:
 
 ```json
 {
@@ -41,13 +44,13 @@ En «Mis temas» selecciona un TXT y escribe su título. Se guarda como apuntes 
 }
 ```
 
-`answer` es el índice de la respuesta correcta de 0 a 3. Se requieren cuatro opciones distintas y una explicación; `notes`, `questions` y `source` son opcionales, pero debe haber notas o al menos una pregunta. El filtro de práctica solo muestra temas que tengan preguntas; el filtro de ejercicios muestra bloques con ejercicios disponibles. Los temas personales pueden tener menos de 50 preguntas y se indica en la biblioteca. Para añadir PDF o Word hay que convertirlos previamente a texto; no se extraen ni indexan automáticamente.
+`answer` es el índice de la respuesta correcta de 0 a 3. Se requieren cuatro opciones distintas y una explicación; `notes`, `questions` y `source` son opcionales, pero debe haber notas o al menos una pregunta. El filtro de práctica solo muestra temas que tengan preguntas; el filtro de ejercicios muestra bloques con ejercicios disponibles.
 
-Los materiales se almacenan en `localStorage` del navegador y no se envían a ningún servidor externo. No introduzcas datos sensibles. Cambiar de navegador, origen o puerto da acceso a otra biblioteca; borrar sus datos puede eliminarla. Exporta una copia JSON y guárdala en un lugar seguro. «Restaurar copia» sustituye todos los temas personales tras confirmación. Los resultados de test y los borradores no se conservan al recargar.
+Los materiales guardados antes de ocultar esa sección se mantienen en `localStorage` del navegador y no se envían a ningún servidor externo. No introduzcas datos sensibles. Cambiar de navegador, origen o puerto da acceso a otra biblioteca; borrar sus datos puede eliminarla. La exportación y restauración están ocultas con la sección. Los resultados de test y los borradores no se conservan al recargar.
 
 ## Publicación en GitHub Pages
 
-La web publicada es pública. La pantalla de clave es solo una **barrera visual**, no autenticación ni protección de contenidos: la comprobación está en el navegador, puede eludirse y la clave puede deducirse, además de que cualquiera puede acceder directamente a los archivos. No uses esta clave para otros servicios ni guardes información sensible. Para privacidad real se necesita control de acceso en un servidor. La biblioteca personal permanece en el navegador de cada dispositivo y no se sincroniza entre dispositivos ni con la aplicación local. Usa la exportación e importación de copias para trasladarla.
+La web publicada es pública. La pantalla de clave es solo una **barrera visual**, no autenticación ni protección de contenidos: la comprobación está en el navegador, puede eludirse y la clave puede deducirse, además de que cualquiera puede acceder directamente a los archivos. No uses esta clave para otros servicios ni guardes información sensible. Para privacidad real se necesita control de acceso en un servidor. Los materiales guardados permanecen en el navegador de cada dispositivo y no se sincronizan entre dispositivos ni con la aplicación local.
 
 El flujo de GitHub Actions ejecuta las pruebas y publica los archivos estáticos al actualizar `main`. Para preparar esos archivos localmente, ejecuta `npm run build`; solo se copian los archivos necesarios a `dist/`. La carpeta no se incluye en el repositorio.
 
