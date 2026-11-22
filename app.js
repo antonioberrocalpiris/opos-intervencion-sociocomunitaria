@@ -3,6 +3,7 @@ import { filterCycles, filterLaws, normalizeSearch, scoreQuestions, selectQuesti
 import { legislation, stages } from './oposicion.js?v=5';
 import { cycles } from './ciclos.js?v=3';
 import { officialTopics } from './temario-oficial.js?v=4';
+import { parsePrivateIndex, searchPrivateDocuments } from './material-search.js';
 
 const $ = id => document.getElementById(id);
 const make = (tag, text, className) => {
@@ -85,6 +86,11 @@ function refreshFilters() {
       option.value = topic.id;
       select.append(option);
     }
+    if (id === 'exercise-filter' && privateDocuments.some(doc => doc.group === 'supuesto')) {
+      const option = make('option', 'Supuesto aportado · violencia de género (local)');
+      option.value = 'supuesto-privado';
+      select.append(option);
+    }
     select.value = [...select.options].some(option => option.value === selected) ? selected : 'all';
   }
   $('topic-count').textContent = String(topics.length);
@@ -107,11 +113,6 @@ document.querySelectorAll('.tab').forEach(button => button.addEventListener('cli
 }));
 window.addEventListener('hashchange', () => showPanel(location.hash.slice(1)));
 showPanel(location.hash.slice(1) || 'practica');
-if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') {
-  const link = make('a', 'Material privado local ↗', 'tab');
-  link.href = './material-privado/index.html';
-  document.querySelector('.tabs').append(link);
-}
 
 let quiz = null;
 $('start').addEventListener('click', () => {
@@ -238,6 +239,11 @@ function renderExercises() {
     const list = make('ul');
     exercise.guide.forEach(item => list.append(make('li', item)));
     details.append(list); card.append(details, referenceElements(exercise.topic)); $('case-list').append(card);
+  }
+  const privateExercise = $('private-exercise');
+  privateExercise.replaceChildren();
+  if ((filter === 'all' || filter === 'supuesto-privado') && privateDocuments.some(doc => doc.group === 'supuesto')) {
+    privateExercise.append(privateCaseCard(true));
   }
 }
 $('exercise-filter').addEventListener('change', renderExercises);
@@ -373,6 +379,7 @@ renderCycles();
 
 const stageSelect = $('stage-select');
 const officialTopicSelect = $('official-topic-select');
+let privateDocuments = [];
 for (const [index, topic] of officialTopics.entries()) {
   const label = topic.length > 100 ? `${topic.slice(0, 100).trimEnd()}…` : topic;
   const option = make('option', `Tema ${index + 1} · ${label}`);
@@ -389,7 +396,144 @@ let deadline = null;
 function showOfficialTopic() {
   const index = Number(officialTopicSelect.value);
   $('official-topic-text').textContent = `Tema ${index + 1}. ${officialTopics[index]}`;
+  const docs = privateDocuments.filter(doc => doc.topic === index + 1);
+  const container = $('topic-material');
+  container.replaceChildren();
+  if (!docs.length) {
+    container.append(make('p', privateDocuments.length ? 'Sin apuntes privados indexados para este tema.' : 'Los apuntes privados no están disponibles en esta versión.', 'muted'));
+    return;
+  }
+  container.append(make('p', '📄 Apuntes privados indexados para este tema:', 'muted'));
+  for (const doc of docs) {
+    const row = make('p');
+    const link = make('a', `Abrir fuente original: ${doc.title} ↗`);
+    link.href = `./material-privado/${doc.file}`;
+    row.append(link);
+    container.append(row);
+  }
+  const review = make('a', 'Revisión y propuestas de mejora del tema 46 ↗');
+  if (index + 1 === 46) {
+    review.href = './material-privado/index.html#revision-tema-46';
+    const row = make('p'); row.append(review); container.append(row);
+  }
+  const button = make('button', 'Buscar en los apuntes de este tema', 'button secondary');
+  button.type = 'button';
+  button.addEventListener('click', () => {
+    $('private-topic').value = String(index + 1);
+    renderPrivateSearch();
+    $('private-query').focus();
+    $('private-search-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  container.append(button);
 }
+function renderPrivateSearch() {
+  const query = $('private-query').value;
+  const container = $('private-results');
+  container.replaceChildren();
+  if (normalizeSearch(query.trim()).length < 2) {
+    $('private-search-status').textContent = 'Escribe al menos dos caracteres.';
+    return;
+  }
+  const results = searchPrivateDocuments(privateDocuments, query, $('private-topic').value);
+  $('private-search-status').textContent = `${results.length} páginas o documentos coincidentes${results.length > 80 ? '; se muestran los primeros 80' : ''}.`;
+  for (const result of results.slice(0, 80)) {
+    const article = make('article');
+    const isPdf = result.doc.file.endsWith('.pdf');
+    const link = make('a', `Fuente: ${result.doc.title}${isPdf ? ` · página ${result.page}` : ' · documento completo'} ↗`);
+    link.href = `./material-privado/${result.doc.file}${isPdf ? `#page=${result.page}` : ''}`;
+    article.append(link, make('p', result.excerpt));
+    if (result.doc.id === 'redaccion') {
+      const preview = make('a', 'Ver texto extraído del Word ↗');
+      preview.href = './material-privado/word-vista.html';
+      article.append(preview);
+    }
+    container.append(article);
+  }
+}
+function privateCaseCard(exercise) {
+  const card = make('article', null, 'card exercise-card');
+  card.append(make('p', 'SUPUESTO APORTADO · SOLO LOCAL', 'eyebrow'), make('h4', 'Violencia de género y acoso digital'));
+  card.append(make('p', exercise
+    ? 'Ejercicio original inspirado en el caso aportado, no un enunciado oficial: ante señales de violencia y acoso digital que afectan a menores de un centro, prepara una respuesta educativa y de protección.'
+    : 'Caso práctico facilitado: archivos individuales indexados. El enunciado aportado termina antes de la instrucción de diseño que sí figura en las resoluciones; su procedencia y fecha no están verificadas como oficiales.'));
+  if (exercise) {
+    card.append(make('strong', 'Distingue actuaciones inmediatas de protección y comunicación, coordinación profesional, prevención de aula y evaluación. ¿Qué justificarías y qué evitarías?'));
+    const label = make('label', 'Tu propuesta (no se guarda)', 'case-answer');
+    const textarea = make('textarea'); textarea.rows = 5;
+    label.append(textarea); card.append(label);
+    const guide = make('details');
+    guide.append(make('summary', 'Ver guía orientativa'));
+    const list = make('ul');
+    for (const text of ['Priorizar protección y comunicación según normativa y protocolo, sin exponer a las menores.', 'Separar la prevención grupal de la intervención ante hechos detectados; no plantear mediación entre víctima y agresor.', 'Concretar acciones, responsables, tiempos e indicadores proporcionados, con datos ficticios.']) list.append(make('li', text));
+    guide.append(list); card.append(guide);
+  }
+  card.append(make('p', 'Fuentes del material aportado (el Word puede descargarse para abrirlo):', 'muted'));
+  for (const doc of privateDocuments.filter(item => item.group === 'supuesto')) {
+    const row = make('p');
+    const link = make('a', `${doc.title} ↗`);
+    link.href = `./material-privado/${doc.file}`;
+    row.append(link); card.append(row);
+    if (doc.id === 'redaccion') {
+      const preview = make('a', 'Ver texto extraído del Word ↗');
+      preview.href = './material-privado/word-vista.html';
+      const previewRow = make('p'); previewRow.append(preview); card.append(previewRow);
+    }
+  }
+  const review = make('a', 'Revisión, fuentes normativas y propuestas ↗');
+  review.href = './material-privado/index.html#revision-supuesto';
+  const row = make('p'); row.append(review); card.append(row);
+  const law = make('a', 'LO 8/2021 · protección frente a la violencia ↗');
+  law.href = 'https://www.boe.es/buscar/act.php?id=BOE-A-2021-9347';
+  law.target = '_blank'; law.rel = 'noopener noreferrer';
+  const lawRow = make('p'); lawRow.append(law); card.append(lawRow);
+  return card;
+}
+function renderPrivateStageCase() {
+  const container = $('private-stage-case');
+  container.replaceChildren();
+  if (stageSelect.value === 'practico' && privateDocuments.some(doc => doc.group === 'supuesto')) container.append(privateCaseCard(false));
+}
+async function loadPrivateMaterial() {
+  if (!['127.0.0.1', 'localhost'].includes(location.hostname)) return;
+  const status = $('private-availability');
+  try {
+    const catalogResponse = await fetch('./material-privado/catalogo.json', { cache: 'no-store' });
+    if (catalogResponse.status === 404) {
+      status.textContent = 'No se ha encontrado el catálogo privado en esta copia local. Si acabas de actualizarla, reinicia el servidor local con npm start.';
+      return;
+    }
+    if (!catalogResponse.ok) throw new Error(`Catálogo privado: HTTP ${catalogResponse.status}`);
+    const indexResponse = await fetch('./material-privado/indice.js', { cache: 'no-store' });
+    if (!indexResponse.ok) throw new Error(`Índice privado: HTTP ${indexResponse.status}`);
+    const docs = parsePrivateIndex(await indexResponse.text(), await catalogResponse.json());
+    if (!docs.length) throw new Error('El catálogo privado está vacío.');
+    await Promise.all(docs.map(async doc => {
+      const response = await fetch(`./material-privado/${doc.file}`, { method: 'HEAD', cache: 'no-store' });
+      if (!response.ok) throw new Error(`No se puede abrir ${doc.title}: HTTP ${response.status}`);
+    }));
+    privateDocuments = docs;
+    for (const topic of [...new Set(docs.map(doc => doc.topic).filter(number => number !== null))].sort((a, b) => a - b)) {
+      const option = make('option', `Tema ${topic} · apuntes indexados`);
+      option.value = String(topic);
+      $('private-topic').append(option);
+      officialTopicSelect.options[topic - 1].textContent += ' · 📄 apuntes indexados';
+    }
+    const link = make('a', 'Material privado local ↗', 'tab');
+    link.href = './material-privado/index.html';
+    document.querySelector('.tabs').append(link);
+    status.textContent = `${docs.length} documentos privados indexados en este ordenador. 📄 en el selector indica un tema con apuntes indexados. Los supuestos también se buscan en «Todos los documentos».`;
+    $('private-search-controls').hidden = false;
+    showOfficialTopic();
+    refreshFilters();
+    renderExercises();
+    renderPrivateStageCase();
+  } catch (error) {
+    status.textContent = `No se ha podido cargar el material privado: ${error.message}. Comprueba los archivos y reinicia el servidor local.`;
+    console.error('Error al cargar material privado:', error);
+  }
+}
+$('private-query').addEventListener('input', renderPrivateSearch);
+$('private-topic').addEventListener('change', renderPrivateSearch);
 function stopTimer() {
   if (interval !== null) clearInterval(interval);
   interval = null;
@@ -411,6 +555,7 @@ function showStage() {
     label.append(input, document.createTextNode(text));
     $('stage-checklist').append(label);
   }
+  renderPrivateStageCase();
 }
 stageSelect.addEventListener('change', () => { promptIndex = 0; showStage(); });
 officialTopicSelect.addEventListener('change', showOfficialTopic);
@@ -449,6 +594,7 @@ $('timer-stop').addEventListener('click', () => {
 });
 showOfficialTopic();
 showStage();
+loadPrivateMaterial();
 $('export').addEventListener('click', () => {
   if (!storageSafe) { $('backup-status').textContent = 'La biblioteca no se ha podido leer; no se puede exportar una copia fiable.'; return; }
   const blob = new Blob([JSON.stringify({ version: 1, topics: personal }, null, 2)], { type: 'application/json' });

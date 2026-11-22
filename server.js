@@ -4,7 +4,7 @@ import { extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('.', import.meta.url)).replace(/\/$/, '');
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.pdf': 'application/pdf', '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
 const port = Number(process.env.PORT || 4173);
 createServer(async (req, res) => {
   let pathname;
@@ -13,7 +13,7 @@ createServer(async (req, res) => {
   const file = resolve(root, `.${pathname === '/' ? '/index.html' : pathname}`);
   const extension = extname(file);
   if (!file.startsWith(root + sep) || !types[extension] ||
-      (['.pdf', '.docx'].includes(extension) && !file.startsWith(resolve(root, 'material-privado') + sep))) {
+      (['.json', '.pdf', '.docx'].includes(extension) && !file.startsWith(resolve(root, 'material-privado') + sep))) {
     res.writeHead(404).end('No encontrado'); return;
   }
   try {

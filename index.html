@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#183c38">
   <title>Un paso cada día · Intervención Sociocomunitaria</title>
   <link rel="stylesheet" href="./styles.css?v=2">
-  <script type="module" src="./access.js?v=7"></script>
+  <script type="module" src="./access.js?v=8"></script>
 </head>
 <body>
   <main id="access-screen" class="access-screen">
@@ -52,12 +52,23 @@
     <section id="ejercicios" class="panel" hidden>
       <div class="section-heading"><div><p class="eyebrow">PIENSA, ORDENA Y APLICA</p><h2>Más allá del test.</h2><p>Practica procesos y argumenta tus decisiones. Las soluciones son orientaciones, no una única respuesta válida.</p></div><span class="section-number">05 / EJERCICIOS</span></div>
       <label class="filter-label">Filtrar ejercicios<select id="exercise-filter"><option value="all">Todos los bloques</option></select></label>
-      <div class="exercise-grid"><div><h3>Ordena los pasos</h3><div id="sequence-list"></div></div><div><h3>Supuestos para reflexionar</h3><div id="case-list"></div></div></div>
+      <div class="exercise-grid"><div><h3>Ordena los pasos</h3><div id="sequence-list"></div></div><div><h3>Supuestos para reflexionar</h3><div id="case-list"></div><div id="private-exercise"></div></div></div>
     </section>
     <section id="fases" class="panel" hidden>
       <div class="section-heading"><div><p class="eyebrow">DE LA PREPARACIÓN AL AULA</p><h2>Entrena las pruebas.</h2><p>Practica la escritura, el caso, la defensa y la exposición a partir de un tema oficial.</p></div><span class="section-number">02 / OPOSICIÓN</span></div>
       <div class="notice">Referencia general: ingreso libre en secundaria de Extremadura, convocatoria de 2025, no necesariamente convocada para esta especialidad. Plazos, contenidos, criterios y tiempos pueden cambiar. Comprueba convocatoria, anexos e instrucciones del tribunal aplicables. Estos ejercicios y sus guías no son oficiales.</div>
-      <div class="card"><label>Tema oficial de Intervención Sociocomunitaria<select id="official-topic-select"></select></label><p id="official-topic-text" aria-live="polite"></p><button id="official-topic-next" class="button secondary" type="button">Siguiente tema</button><p class="muted">Transcripción orientativa del anexo I de la Orden de 1 de febrero de 1996, aplicable conforme a la Orden ECD/191/2012 y a la referencia de convocatoria de 2025. Comprueba el enunciado en el <a href="https://www.boe.es/boe/dias/1996/02/13/pdfs/C00001-00096.pdf#page=16" target="_blank" rel="noopener noreferrer">suplemento oficial del BOE ↗</a> y la convocatoria vigente. Las prácticas propuestas no son enunciados oficiales; la relación con un módulo debe verificarse.</p></div>
+      <div class="card"><label>Tema oficial de Intervención Sociocomunitaria<select id="official-topic-select"></select></label><p id="official-topic-text" aria-live="polite"></p><button id="official-topic-next" class="button secondary" type="button">Siguiente tema</button><div id="topic-material" aria-live="polite"></div><p class="muted">Transcripción orientativa del anexo I de la Orden de 1 de febrero de 1996, aplicable conforme a la Orden ECD/191/2012 y a la referencia de convocatoria de 2025. Comprueba el enunciado en el <a href="https://www.boe.es/boe/dias/1996/02/13/pdfs/C00001-00096.pdf#page=16" target="_blank" rel="noopener noreferrer">suplemento oficial del BOE ↗</a> y la convocatoria vigente. Las prácticas propuestas no son enunciados oficiales; la relación con un módulo debe verificarse.</p></div>
+      <div class="card" id="private-search-card">
+        <h3>Buscar en tus documentos</h3>
+        <p id="private-availability" role="status">Los documentos aportados y su índice están disponibles únicamente en la copia local de este ordenador, no en GitHub Pages.</p>
+        <div id="private-search-controls" hidden>
+          <p>Busca palabras o frases en los documentos indexados. Los resultados enlazan al original y, en PDF, a la página. El texto se ha extraído automáticamente; contrasta siempre con el original.</p>
+          <div class="settings-grid"><label>Buscar contenido<input id="private-query" type="search" placeholder="Ej. lateralidad, mediación, 1406"></label><label>Buscar en<select id="private-topic"><option value="all">Todos los documentos, incluidos supuestos</option><option value="supuesto">Supuesto práctico · violencia de género</option></select></label></div>
+          <p id="private-search-status" class="muted" role="status">Escribe al menos dos caracteres.</p><div id="private-results"></div>
+          <p><a href="./material-privado/index.html">Abrir biblioteca privada completa y análisis ↗</a></p>
+        </div>
+      </div>
+      <div id="private-stage-case"></div>
       <div class="card"><label>Fase de entrenamiento<select id="stage-select"></select></label><h3 id="stage-title"></h3><p id="stage-description"></p><div class="stage-task"><strong>Propuesta de entrenamiento</strong><p id="stage-prompt"></p><button id="stage-new" class="button secondary" type="button">Otra propuesta</button></div><div class="timer-controls"><label>Minutos de práctica<input id="stage-minutes" type="number" min="1" max="240" value="30"></label><button id="timer-start" class="button" type="button">Iniciar reloj</button><button id="timer-stop" class="button outline" type="button">Detener</button><strong id="stage-timer" role="timer">00:00</strong></div><p id="timer-status" class="status" role="status">El tiempo es orientativo y puede ajustarse.</p><label>Tu borrador (no se guarda)<textarea id="stage-draft" rows="9" placeholder="Escribe aquí tu esquema, solución o reflexión..."></textarea></label><details><summary>Guía de autoevaluación</summary><div id="stage-checklist"></div></details><p class="muted">Cambiar de fase o propuesta conserva el borrador mientras no recargues. La autoevaluación no es una calificación oficial.</p></div>
     </section>
     <section id="ciclos" class="panel" hidden>
