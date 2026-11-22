@@ -12,6 +12,8 @@ npm start
 
 Abre <http://127.0.0.1:4173>. Para cambiar de puerto, ejecuta `PORT=4174 npm start`. Detén el servidor con `Ctrl+C`. Se escucha solo en el propio ordenador.
 
+La pantalla de acceso solicita la clave compartida, distinguiendo mayúsculas y minúsculas. Se recuerda durante la sesión de la pestaña, también al recargar. Necesita JavaScript, almacenamiento de sesión y una conexión segura (HTTPS o localhost).
+
 ## Qué incluye
 
 - Dos **bloques propuestos**, no epígrafes oficiales: diagnóstico y planificación; inclusión, diversidad y acción educativa. Cada uno incluye un esquema breve y 50 preguntas originales de reconocimiento conceptual, con cuatro opciones y explicación. Son una primera base de repaso, no un desarrollo exhaustivo de la oposición.
@@ -45,7 +47,7 @@ Los materiales se almacenan en `localStorage` del navegador y no se envían a ni
 
 ## Publicación en GitHub Pages
 
-La web publicada es pública y cualquiera puede acceder a sus archivos. La biblioteca personal permanece en el navegador de cada dispositivo y no se sincroniza entre dispositivos ni con la aplicación local. Usa la exportación e importación de copias para trasladarla.
+La web publicada es pública. La pantalla de clave es solo una **barrera visual**, no autenticación ni protección de contenidos: la comprobación está en el navegador, puede eludirse y la clave puede deducirse, además de que cualquiera puede acceder directamente a los archivos. No uses esta clave para otros servicios ni guardes información sensible. Para privacidad real se necesita control de acceso en un servidor. La biblioteca personal permanece en el navegador de cada dispositivo y no se sincroniza entre dispositivos ni con la aplicación local. Usa la exportación e importación de copias para trasladarla.
 
 El flujo de GitHub Actions ejecuta las pruebas y publica los archivos estáticos al actualizar `main`. Para preparar esos archivos localmente, ejecuta `npm run build`; solo se copian los archivos necesarios a `dist/`. La carpeta no se incluye en el repositorio.
 

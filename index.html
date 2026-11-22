@@ -6,9 +6,25 @@
   <meta name="theme-color" content="#183c38">
   <title>Un paso cada día · Intervención Sociocomunitaria</title>
   <link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./access.js"></script>
 </head>
 <body>
+  <main id="access-screen" class="access-screen">
+    <div class="card access-card">
+      <p class="eyebrow">UN ESPACIO PARA TI</p>
+      <h1>Un paso cada día.</h1>
+      <p>Hay palabras que guardan todo el cariño del mundo. Introduce vuestra clave para comenzar.</p>
+      <form id="access-form">
+        <label for="access-password">Clave compartida</label>
+        <input id="access-password" type="password" autocomplete="current-password" required autofocus>
+        <button id="access-submit" class="button" type="submit">Entrar →</button>
+      </form>
+      <p id="access-error" class="error" role="alert"></p>
+      <p class="muted">Cada paso cuenta. Y no estás sola en este camino. ♥</p>
+      <noscript>Activa JavaScript para entrar en la aplicación.</noscript>
+    </div>
+  </main>
+  <div id="application" hidden>
   <header class="topbar"><div class="shell brand"><span class="brand-mark" aria-hidden="true">✦</span><div><strong>UN PASO CADA DÍA</strong><small>Intervención Sociocomunitaria · Extremadura</small></div></div></header>
   <main class="shell">
     <section class="hero">
@@ -55,6 +71,6 @@
     </section>
     <footer><span>Hecho para acompañarte en el camino. Cada pequeño esfuerzo suma.</span><strong>Confía en todo lo que estás construyendo. ✦</strong></footer>
   </main>
-  <noscript>Esta aplicación necesita JavaScript para funcionar.</noscript>
+  </div>
 </body>
 </html>
