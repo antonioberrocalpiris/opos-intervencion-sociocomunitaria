@@ -1,5 +1,5 @@
 import { lawTopic, lawQuestions } from './legislacion-bank.js';
-import { topic46, questions46 } from './tema46-bank.js';
+import { topic46, questions46 } from './tema46-bank.js?v=2';
 
 export const topicReferences = {
   diagnostico: [{ label: 'Currículo de Integración Social: contexto y metodología de la intervención (referencia contextual)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2012-10866' }],

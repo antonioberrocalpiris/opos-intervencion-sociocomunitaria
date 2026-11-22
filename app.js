@@ -1,4 +1,4 @@
-import { topics, questions, guides, sequences, cases, topicReferences } from './data.js?v=3';
+import { topics, questions, guides, sequences, cases, topicReferences } from './data.js?v=4';
 import { filterCycles, filterLaws, normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js?v=5';
 import { legislation, stages } from './oposicion.js?v=5';
 import { cycles } from './ciclos.js?v=3';
