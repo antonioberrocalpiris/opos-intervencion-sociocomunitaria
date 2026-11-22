@@ -3,7 +3,8 @@ import { filterCycles, filterLaws, normalizeSearch, scoreQuestions, selectQuesti
 import { legislation, stages } from './oposicion.js?v=5';
 import { cycles } from './ciclos.js?v=3';
 import { officialTopics } from './temario-oficial.js?v=4';
-import { parsePrivateIndex, searchPrivateDocuments } from './material-search.js';
+import { parsePrivateIndex, searchPrivateDocuments, searchDocumentIndex } from './material-search.js?v=2';
+import { documentIndex } from './indice-material.js';
 
 const $ = id => document.getElementById(id);
 const make = (tag, text, className) => {
@@ -380,6 +381,65 @@ renderCycles();
 const stageSelect = $('stage-select');
 const officialTopicSelect = $('official-topic-select');
 let privateDocuments = [];
+for (const entry of documentIndex) {
+  if ([...$('index-document').options].some(option => option.value === entry.document)) continue;
+  const option = make('option', entry.title);
+  option.value = entry.document;
+  $('index-document').append(option);
+}
+function renderDocumentIndex() {
+  const entries = searchDocumentIndex(documentIndex, $('index-query').value, $('index-group').value, $('index-document').value);
+  $('index-count').textContent = `${entries.length} apartados localizados.`;
+  const results = $('index-results');
+  results.replaceChildren();
+  if (!entries.length) results.append(make('p', 'No hay apartados con esas palabras y filtros. Prueba otra búsqueda; el índice no es exhaustivo.', 'muted'));
+  for (const entry of entries) {
+    const card = make('article', null, 'card source-list');
+    const pageText = entry.pages.length ? ` · ${entry.pages.length === 1 ? 'página' : 'páginas'} ${entry.pages.join(', ')}` : ' · documento completo, sin página';
+    card.append(make('p', entry.group === 'tema' ? 'TEMA OFICIAL 46' : 'SUPUESTO PRÁCTICO', 'eyebrow'), make('h3', entry.section), make('p', `Fuente: ${entry.title}${pageText}`));
+    const doc = privateDocuments.find(item => item.id === entry.document);
+    if (doc) {
+      if (entry.pages.length) {
+        for (const page of entry.pages) {
+          const row = make('p');
+          const link = make('a', `Abrir documento original · página ${page} ↗`);
+          link.href = `./material-privado/${doc.file}#page=${page}`;
+          row.append(link); card.append(row);
+        }
+      } else {
+        const row = make('p');
+        const link = make('a', 'Abrir documento Word original ↗');
+        link.href = `./material-privado/${doc.file}`;
+        row.append(link); card.append(row);
+        const preview = make('a', 'Ver texto extraído del Word ↗');
+        preview.href = './material-privado/word-vista.html';
+        const previewRow = make('p'); previewRow.append(preview); card.append(previewRow);
+      }
+    } else {
+      card.append(make('p', 'Original no disponible en esta versión; consúltalo en la copia local.', 'muted'));
+    }
+    results.append(card);
+  }
+}
+for (const id of ['index-query', 'index-group', 'index-document']) {
+  $(id).addEventListener(id === 'index-query' ? 'input' : 'change', renderDocumentIndex);
+}
+function openDocumentIndex(group, document = 'all') {
+  $('index-query').value = '';
+  $('index-group').value = group;
+  $('index-document').value = document;
+  renderDocumentIndex();
+  showPanel('indice');
+  history.replaceState(null, '', '#indice');
+  $('index-query').focus();
+}
+function indexButton(group, document = 'all') {
+  const button = make('button', 'Buscar en el índice de contenidos', 'button secondary');
+  button.type = 'button';
+  button.addEventListener('click', () => openDocumentIndex(group, document));
+  return button;
+}
+renderDocumentIndex();
 for (const [index, topic] of officialTopics.entries()) {
   const label = topic.length > 100 ? `${topic.slice(0, 100).trimEnd()}…` : topic;
   const option = make('option', `Tema ${index + 1} · ${label}${index === 45 ? ' · 📄 apuntes privados' : ''}`);
@@ -402,12 +462,14 @@ function showOfficialTopic() {
   if (!docs.length) {
     if (index + 1 === 46) {
       container.append(make('p', '📄 Tema 46: apuntes aportados en PDF, indexados en la copia local. El original y la búsqueda en su contenido no están disponibles en esta versión; no se ha publicado el archivo.', 'muted'));
+      container.append(indexButton('tema', 'tema46'));
     } else {
       container.append(make('p', privateDocuments.length ? 'Sin apuntes privados indexados para este tema.' : 'No hay apuntes identificados en el catálogo público para este tema.', 'muted'));
     }
     return;
   }
   container.append(make('p', '📄 Apuntes privados indexados para este tema:', 'muted'));
+  if (index + 1 === 46) container.append(indexButton('tema', 'tema46'));
   for (const doc of docs) {
     const row = make('p');
     const link = make('a', `Abrir fuente original: ${doc.title} ↗`);
@@ -490,6 +552,7 @@ function privateCaseCard(exercise) {
   law.href = 'https://www.boe.es/buscar/act.php?id=BOE-A-2021-9347';
   law.target = '_blank'; law.rel = 'noopener noreferrer';
   const lawRow = make('p'); lawRow.append(law); card.append(lawRow);
+  card.append(indexButton('supuesto'));
   return card;
 }
 function privateCaseNotice() {
@@ -497,7 +560,8 @@ function privateCaseNotice() {
   card.append(make('p', '📄 MATERIAL APORTADO · CONSULTA LOCAL', 'eyebrow'),
     make('h4', 'Supuesto práctico · violencia de género y acoso digital'),
     make('p', 'Material organizado en cuatro archivos: enunciado en PDF, resolución en PDF, solución en PDF y redacción en Word. La copia local también incluye una revisión y un ejercicio inspirado en el caso.'),
-    make('p', 'Los documentos y su índice no están publicados aquí; para abrirlos o buscar en su contenido usa la copia local en el ordenador donde están guardados.', 'muted'));
+    make('p', 'Los documentos y la búsqueda de texto completo no están publicados aquí. Puedes consultar el índice de conceptos; para abrir los originales usa la copia local.', 'muted'));
+  card.append(indexButton('supuesto'));
   return card;
 }
 function renderPrivateStageCase() {
@@ -524,6 +588,7 @@ async function loadPrivateMaterial() {
       if (!response.ok) throw new Error(`No se puede abrir ${doc.title}: HTTP ${response.status}`);
     }));
     privateDocuments = docs;
+    renderDocumentIndex();
     for (const topic of [...new Set(docs.map(doc => doc.topic).filter(number => number !== null))].sort((a, b) => a - b)) {
       const option = make('option', `Tema ${topic} · apuntes indexados`);
       option.value = String(topic);

@@ -1,5 +1,15 @@
 import { normalizeSearch } from './logic.js?v=5';
 
+export function searchDocumentIndex(entries, query, group = 'all', document = 'all') {
+  const words = normalizeSearch(query.trim()).split(/\s+/).filter(Boolean);
+  return entries.filter(entry => {
+    const text = normalizeSearch(`${entry.title} ${entry.section} ${entry.keywords}`);
+    return (group === 'all' || entry.group === group)
+      && (document === 'all' || entry.document === document)
+      && words.every(word => text.includes(word));
+  });
+}
+
 export function parsePrivateIndex(indexText, catalog) {
   const match = /^const documents = ([\s\S]*);\s*$/.exec(indexText);
   if (!match) throw new Error('El índice privado no tiene el formato esperado.');

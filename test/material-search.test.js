@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parsePrivateIndex, searchPrivateDocuments } from '../material-search.js';
+import { parsePrivateIndex, searchPrivateDocuments, searchDocumentIndex } from '../material-search.js';
+import { documentIndex } from '../indice-material.js';
 
 const index = 'const documents = [{"id":"t46","title":"Tema 46","file":"archivos/tema46.pdf","pages":["Desarrollo motor y lateralidad.","Preferencia LATERAL."]},{"id":"caso","title":"Supuesto","file":"archivos/caso.docx","pages":["Prevención y mediación"]}];\n';
 const catalog = [{ id: 't46', topic: 46, group: 'tema' }, { id: 'caso', topic: null, group: 'supuesto' }];
@@ -26,4 +27,13 @@ test('busca en todas las páginas ignorando acentos y permite filtrar por tema',
   assert.equal(searchPrivateDocuments(docs, 'no existe').length, 0);
   assert.equal(searchPrivateDocuments(docs, 'LATERALIDAD', '46')[0].page, 1);
   assert.equal(searchPrivateDocuments(docs, 'x').length, 0);
+});
+
+test('índice descriptivo filtra palabras, grupo y documento sin confundirlo con texto completo', () => {
+  assert.ok(searchDocumentIndex(documentIndex, 'LATERALIDAD cruzada', 'tema').some(entry => entry.document === 'tema46' && entry.pages.includes(6)));
+  assert.ok(searchDocumentIndex(documentIndex, 'mediacion escolar', 'supuesto').some(entry => entry.document === 'resuelto' && entry.pages.includes(13)));
+  assert.ok(searchDocumentIndex(documentIndex, 'evaluacion', 'supuesto', 'solucion').every(entry => entry.document === 'solucion'));
+  assert.equal(searchDocumentIndex(documentIndex, 'lateralidad', 'supuesto').length, 0);
+  assert.equal(searchDocumentIndex(documentIndex, '', 'all', 'redaccion').length, 2);
+  assert.ok(documentIndex.every(entry => entry.title && entry.section && entry.keywords && Array.isArray(entry.pages)));
 });

@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#183c38">
   <title>Un paso cada día · Intervención Sociocomunitaria</title>
   <link rel="stylesheet" href="./styles.css?v=2">
-  <script type="module" src="./access.js?v=9"></script>
+  <script type="module" src="./access.js?v=10"></script>
 </head>
 <body>
   <main id="access-screen" class="access-screen">
@@ -42,7 +42,14 @@
       <button type="button" class="tab" data-panel="ejercicios">05 <span>Ejercicios</span></button>
       <button type="button" class="tab" data-panel="estudio">06 <span>Esquemas</span></button>
       <button type="button" class="tab" data-panel="fuentes">07 <span>Fuentes</span></button>
+      <button type="button" class="tab" data-panel="indice">08 <span>Índice de mi material</span></button>
     </nav>
+    <section id="indice" class="panel" hidden>
+      <div class="section-heading"><div><p class="eyebrow">TU MATERIAL, LOCALIZABLE</p><h2>Índice de tus contenidos.</h2><p>Busca conceptos y localiza el documento y sus páginas.</p></div><span class="section-number">08 / ÍNDICE</span></div>
+      <div class="notice">Índice orientativo de conceptos, no una búsqueda íntegra del texto: no garantiza encontrar todas las apariciones. Los originales y el índice de texto completo permanecen solo en el ordenador donde están guardados. Las páginas son las del PDF; el Word no dispone de paginación en el texto extraído.</div>
+      <div class="card"><div class="settings-grid"><label>Buscar conceptos<input id="index-query" type="search" placeholder="Ej. lateralidad, evaluación, familias"></label><label>Contenido<select id="index-group"><option value="all">Todos</option><option value="tema">Tema 46</option><option value="supuesto">Supuesto práctico</option></select></label><label>Documento<select id="index-document"><option value="all">Todos los documentos</option></select></label></div><p id="index-count" class="muted" role="status"></p></div>
+      <div id="index-results"></div>
+    </section>
     <section id="practica" class="panel">
       <div class="section-heading"><div><p class="eyebrow">APRENDER TAMBIÉN ES PRACTICAR</p><h2>Un poco cada día.</h2><p>Elige un bloque y aprende de cada respuesta. Los errores también forman parte del camino.</p></div><span class="section-number">01 / PRÁCTICA</span></div>
       <div class="card settings"><div class="settings-grid"><label>Bloque o tema<select id="topic-filter"><option value="all">Todos los temas con preguntas</option></select></label><label>Número de preguntas<select id="count"><option>1</option><option>2</option><option>5</option><option selected>10</option><option>20</option><option>50</option><option>100</option></select></label><label>Modalidad<select id="mode"><option value="practice">Aprender con feedback</option><option value="review">Autocomprobación al terminar</option></select></label></div><p class="muted">Preguntas de repaso conceptual, no una prueba oficial de oposición; sin penalización ni nota oficial.</p><button id="start" type="button" class="button">Crear mi práctica →</button><p id="quiz-error" class="error" role="alert"></p></div>
@@ -60,7 +67,7 @@
       <div class="card"><label>Tema oficial de Intervención Sociocomunitaria<select id="official-topic-select"></select></label><p id="official-topic-text" aria-live="polite"></p><button id="official-topic-next" class="button secondary" type="button">Siguiente tema</button><div id="topic-material" aria-live="polite"></div><p class="muted">Transcripción orientativa del anexo I de la Orden de 1 de febrero de 1996, aplicable conforme a la Orden ECD/191/2012 y a la referencia de convocatoria de 2025. Comprueba el enunciado en el <a href="https://www.boe.es/boe/dias/1996/02/13/pdfs/C00001-00096.pdf#page=16" target="_blank" rel="noopener noreferrer">suplemento oficial del BOE ↗</a> y la convocatoria vigente. Las prácticas propuestas no son enunciados oficiales; la relación con un módulo debe verificarse.</p></div>
       <div class="card" id="private-search-card">
         <h3>Buscar en tus documentos</h3>
-        <p id="private-availability" role="status">Material identificado: apuntes del tema 46 y cuatro archivos del supuesto práctico. 📄 señala apuntes privados en el selector. Los documentos y su índice de búsqueda están disponibles únicamente en la copia local del ordenador donde se guardaron, no en GitHub Pages.</p>
+        <p id="private-availability" role="status">Material identificado: apuntes del tema 46 y cuatro archivos del supuesto práctico. 📄 señala apuntes privados en el selector. El índice de conceptos está disponible en «Índice de mi material»; los documentos y la búsqueda de texto completo solo están en la copia local del ordenador donde se guardaron.</p>
         <div id="private-search-controls" hidden>
           <p>Busca palabras o frases en los documentos indexados. Los resultados enlazan al original y, en PDF, a la página. El texto se ha extraído automáticamente; contrasta siempre con el original.</p>
           <div class="settings-grid"><label>Buscar contenido<input id="private-query" type="search" placeholder="Ej. lateralidad, mediación, 1406"></label><label>Buscar en<select id="private-topic"><option value="all">Todos los documentos, incluidos supuestos</option><option value="supuesto">Supuesto práctico · violencia de género</option></select></label></div>
