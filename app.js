@@ -86,8 +86,8 @@ function refreshFilters() {
       option.value = topic.id;
       select.append(option);
     }
-    if (id === 'exercise-filter' && privateDocuments.some(doc => doc.group === 'supuesto')) {
-      const option = make('option', 'Supuesto aportado · violencia de género (local)');
+    if (id === 'exercise-filter') {
+      const option = make('option', 'Supuesto aportado · violencia de género');
       option.value = 'supuesto-privado';
       select.append(option);
     }
@@ -242,8 +242,8 @@ function renderExercises() {
   }
   const privateExercise = $('private-exercise');
   privateExercise.replaceChildren();
-  if ((filter === 'all' || filter === 'supuesto-privado') && privateDocuments.some(doc => doc.group === 'supuesto')) {
-    privateExercise.append(privateCaseCard(true));
+  if (filter === 'all' || filter === 'supuesto-privado') {
+    privateExercise.append(privateDocuments.some(doc => doc.group === 'supuesto') ? privateCaseCard(true) : privateCaseNotice());
   }
 }
 $('exercise-filter').addEventListener('change', renderExercises);
@@ -382,7 +382,7 @@ const officialTopicSelect = $('official-topic-select');
 let privateDocuments = [];
 for (const [index, topic] of officialTopics.entries()) {
   const label = topic.length > 100 ? `${topic.slice(0, 100).trimEnd()}…` : topic;
-  const option = make('option', `Tema ${index + 1} · ${label}`);
+  const option = make('option', `Tema ${index + 1} · ${label}${index === 45 ? ' · 📄 apuntes privados' : ''}`);
   option.value = String(index);
   officialTopicSelect.append(option);
 }
@@ -400,7 +400,11 @@ function showOfficialTopic() {
   const container = $('topic-material');
   container.replaceChildren();
   if (!docs.length) {
-    container.append(make('p', privateDocuments.length ? 'Sin apuntes privados indexados para este tema.' : 'Los apuntes privados no están disponibles en esta versión.', 'muted'));
+    if (index + 1 === 46) {
+      container.append(make('p', '📄 Tema 46: apuntes aportados en PDF, indexados en la copia local. El original y la búsqueda en su contenido no están disponibles en esta versión; no se ha publicado el archivo.', 'muted'));
+    } else {
+      container.append(make('p', privateDocuments.length ? 'Sin apuntes privados indexados para este tema.' : 'No hay apuntes identificados en el catálogo público para este tema.', 'muted'));
+    }
     return;
   }
   container.append(make('p', '📄 Apuntes privados indexados para este tema:', 'muted'));
@@ -488,10 +492,18 @@ function privateCaseCard(exercise) {
   const lawRow = make('p'); lawRow.append(law); card.append(lawRow);
   return card;
 }
+function privateCaseNotice() {
+  const card = make('article', null, 'card exercise-card');
+  card.append(make('p', '📄 MATERIAL APORTADO · CONSULTA LOCAL', 'eyebrow'),
+    make('h4', 'Supuesto práctico · violencia de género y acoso digital'),
+    make('p', 'Material organizado en cuatro archivos: enunciado en PDF, resolución en PDF, solución en PDF y redacción en Word. La copia local también incluye una revisión y un ejercicio inspirado en el caso.'),
+    make('p', 'Los documentos y su índice no están publicados aquí; para abrirlos o buscar en su contenido usa la copia local en el ordenador donde están guardados.', 'muted'));
+  return card;
+}
 function renderPrivateStageCase() {
   const container = $('private-stage-case');
   container.replaceChildren();
-  if (stageSelect.value === 'practico' && privateDocuments.some(doc => doc.group === 'supuesto')) container.append(privateCaseCard(false));
+  if (stageSelect.value === 'practico') container.append(privateDocuments.some(doc => doc.group === 'supuesto') ? privateCaseCard(false) : privateCaseNotice());
 }
 async function loadPrivateMaterial() {
   if (!['127.0.0.1', 'localhost'].includes(location.hostname)) return;
@@ -516,7 +528,7 @@ async function loadPrivateMaterial() {
       const option = make('option', `Tema ${topic} · apuntes indexados`);
       option.value = String(topic);
       $('private-topic').append(option);
-      officialTopicSelect.options[topic - 1].textContent += ' · 📄 apuntes indexados';
+      if (topic !== 46) officialTopicSelect.options[topic - 1].textContent += ' · 📄 apuntes privados';
     }
     const link = make('a', 'Material privado local ↗', 'tab');
     link.href = './material-privado/index.html';
