@@ -4,6 +4,7 @@ import { stages, legislation } from '../oposicion.js';
 import { lawQuestions, lawTopic } from '../legislacion-bank.js';
 import { cycles } from '../ciclos.js';
 import { officialTopics } from '../temario-oficial.js';
+import { filterCycles, filterLaws } from '../logic.js';
 
 test('hay entrenamientos específicos para todas las partes y fases previstas', () => {
   assert.deepEqual(stages.map(stage => stage.id), ['tema', 'practico', 'programacion', 'unidad', 'debate']);
@@ -63,6 +64,23 @@ test('legislación dispone de fuentes oficiales y 50 preguntas', () => {
   assert.ok(legislation.length >= 10);
   for (const law of legislation) {
     assert.ok(law.title && law.summary && law.application);
+    assert.ok(law.scope.length && law.kind);
     assert.match(law.url, /^https:\/\/(www\.boe\.es|doe\.juntaex\.es|www\.educarex\.es)\//);
   }
+});
+
+test('los filtros de normativa son combinables, incluyen fuentes mixtas y toleran acentos', () => {
+  assert.ok(filterLaws(legislation, { area: 'Formación profesional', kind: 'Real decreto', query: 'ordenacion' }).some(law => law.title.includes('659/2023')));
+  assert.equal(filterLaws(legislation, { scope: 'Europeo', query: 'proteccion de datos' })[0].area, 'Protección de datos');
+  assert.equal(filterLaws(legislation, { scope: 'Extremadura', kind: 'Real decreto' }).length, 0);
+});
+
+test('los filtros de atribución devuelven únicamente módulos y cursos coincidentes', () => {
+  const match = filterCycles(cycles, { query: 'ecuestres', grade: 'Grado medio', course: '2.º', attribution: 'shared' });
+  assert.equal(match.length, 1);
+  assert.deepEqual(match[0].modules.map(module => module.name.slice(0, 4)), ['1328', '1708', '1713']);
+  const specific = filterCycles(cycles, { query: '0015' });
+  assert.equal(specific.length, 1);
+  assert.equal(specific[0].modules.length, 1);
+  assert.equal(filterCycles(cycles, { query: 'ecuestres', course: 'Distribución' }).length, 0);
 });

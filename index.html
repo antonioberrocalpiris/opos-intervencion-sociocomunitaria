@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#183c38">
   <title>Un paso cada día · Intervención Sociocomunitaria</title>
   <link rel="stylesheet" href="./styles.css?v=2">
-  <script type="module" src="./access.js?v=4"></script>
+  <script type="module" src="./access.js?v=5"></script>
 </head>
 <body>
   <main id="access-screen" class="access-screen">
@@ -63,13 +63,15 @@
     <section id="ciclos" class="panel" hidden>
       <div class="section-heading"><div><p class="eyebrow">DE LA ESPECIALIDAD AL AULA</p><h2>Ciclos y currículos.</h2><p>Localiza los títulos, módulos y cursos relacionados con la atribución docente de la especialidad.</p></div><span class="section-number">03 / FP</span></div>
       <div class="notice">La atribución se establece por módulo y especialidad, no por ciclo completo. Los cursos y horas de diez títulos proceden de las instrucciones extremeñas consolidadas 12 y 13/2024; comprueba cambios posteriores y la asignación del centro. En tres títulos no se han localizado currículo propio, distribución ni oferta en Extremadura. La relación no garantiza exhaustividad de ciclos, cursos de especialización u optativas. En noviembre de 2026 hay un <a href="https://doe.juntaex.es/otrosFormatos/html.php?xml=2026062936&amp;anio=2026&amp;doe=2220o" target="_blank" rel="noopener noreferrer">proyecto de decreto de grado superior en información pública</a>, todavía no aprobado; sigue su tramitación.</div>
-      <label class="filter-label">Buscar por ciclo, módulo o curso<input id="cycle-search" type="search" placeholder="Ej. integración, primero..."></label>
+      <div class="notice"><strong>Tu especialidad: 590108 · Intervención Sociocomunitaria</strong> (Profesorado de Enseñanza Secundaria). La atribución corresponde a módulos concretos, no al ciclo completo; no es la especialidad «Servicios a la Comunidad». La asignación efectiva depende del centro y de la normativa vigente.</div>
+      <div class="settings-grid"><label>Buscar por ciclo, módulo o código<input id="cycle-search" type="search" placeholder="Ej. 0015, infantil, integración"></label><label>Grado<select id="cycle-grade"><option value="all">Todos</option><option value="Grado medio">Grado medio</option><option value="Grado superior">Grado superior</option></select></label><label>Curso<select id="cycle-course"><option value="all">Todos y pendientes</option><option value="1.º">1.º</option><option value="2.º">2.º</option><option value="Distribución">Pendiente de localizar</option></select></label><label>Atribución<select id="cycle-attribution"><option value="all">Todas las identificadas</option><option value="shared">Indicada como compartida</option><option value="other">No indicada como compartida</option></select></label></div>
+      <p class="muted">«No indicada como compartida» no demuestra exclusividad: comprueba la ficha oficial de profesorado.</p><p id="cycle-count" class="muted" role="status"></p>
       <div id="cycle-list"></div>
     </section>
     <section id="legislacion" class="panel" hidden>
       <div class="section-heading"><div><p class="eyebrow">FUNDAMENTAR PARA ENSEÑAR</p><h2>Legislación educativa y de FP.</h2><p>Fichas para relacionar las fuentes oficiales con tus decisiones docentes y de oposición.</p></div><span class="section-number">04 / NORMATIVA</span></div>
       <div class="notice">Guía orientativa, no asesoramiento jurídico. Abre cada fuente y comprueba su texto consolidado, modificaciones, ámbito y fecha de aplicación. Los currículos concretos están en «Ciclos y currículos».</div>
-      <label class="filter-label">Filtrar por ámbito<select id="law-filter"><option value="all">Todos los ámbitos</option></select></label>
+      <div class="settings-grid"><label>Buscar por nombre o contenido<input id="law-search" type="search" placeholder="Ej. 659/2023, inclusión, currículo"></label><label>Materia<select id="law-filter"><option value="all">Todas las materias</option></select></label><label>Ámbito territorial<select id="law-scope"><option value="all">Todos los ámbitos</option></select></label><label>Tipo de fuente<select id="law-kind"><option value="all">Todos los tipos</option></select></label></div><p id="law-count" class="muted" role="status"></p>
       <div id="law-list"></div>
     </section>
     <section id="estudio" class="panel" hidden>

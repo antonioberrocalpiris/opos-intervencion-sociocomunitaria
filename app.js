@@ -1,6 +1,6 @@
 import { topics, questions, guides, sequences, cases } from './data.js?v=2';
-import { normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js';
-import { legislation, stages } from './oposicion.js?v=4';
+import { filterCycles, filterLaws, normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js?v=5';
+import { legislation, stages } from './oposicion.js?v=5';
 import { cycles } from './ciclos.js?v=3';
 import { officialTopics } from './temario-oficial.js?v=4';
 
@@ -87,6 +87,11 @@ document.querySelectorAll('.tab').forEach(button => button.addEventListener('cli
 }));
 window.addEventListener('hashchange', () => showPanel(location.hash.slice(1)));
 showPanel(location.hash.slice(1) || 'practica');
+if (location.hostname === '127.0.0.1' || location.hostname === 'localhost') {
+  const link = make('a', 'Material privado local ↗', 'tab');
+  link.href = './material-privado/index.html';
+  document.querySelector('.tabs').append(link);
+}
 
 let quiz = null;
 $('start').addEventListener('click', () => {
@@ -288,18 +293,27 @@ for (const topic of topics) {
   $('study-list').append(card);
 }
 
-for (const area of new Set(legislation.map(law => law.area))) {
-  const option = make('option', area);
-  option.value = area;
-  $('law-filter').append(option);
+for (const [id, values] of [
+  ['law-filter', legislation.map(law => law.area)],
+  ['law-scope', legislation.flatMap(law => law.scope)],
+  ['law-kind', legislation.map(law => law.kind)]
+]) {
+  for (const value of new Set(values)) {
+    const option = make('option', value);
+    option.value = value;
+    $(id).append(option);
+  }
 }
 function renderLaws() {
   $('law-list').replaceChildren();
-  for (const law of legislation.filter(item => $('law-filter').value === 'all' || item.area === $('law-filter').value)) {
+  const matches = filterLaws(legislation, { area: $('law-filter').value, scope: $('law-scope').value, kind: $('law-kind').value, query: $('law-search').value });
+  $('law-count').textContent = `${matches.length} fuentes encontradas.`;
+  if (!matches.length) $('law-list').append(make('p', 'No hay resultados con esos filtros.', 'muted'));
+  for (const law of matches) {
     const card = make('article', null, 'card source-list');
     const link = make('a', 'Abrir fuente oficial ↗');
     link.href = law.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    card.append(make('p', law.area, 'eyebrow'), make('h3', law.title), make('p', law.summary), make('p', `Para preparar la oposición: ${law.application}`), link);
+    card.append(make('p', `${law.area} · ${law.scope.join(' / ')} · ${law.kind}`, 'eyebrow'), make('h3', law.title), make('p', law.summary), make('p', `Para preparar la oposición: ${law.application}`), link);
     if (law.extra) {
       const extra = make('a', law.extra.text + ' ↗');
       extra.href = law.extra.url; extra.target = '_blank'; extra.rel = 'noopener noreferrer';
@@ -308,20 +322,21 @@ function renderLaws() {
     $('law-list').append(card);
   }
 }
-$('law-filter').addEventListener('change', renderLaws);
+for (const id of ['law-filter', 'law-scope', 'law-kind']) $(id).addEventListener('change', renderLaws);
+$('law-search').addEventListener('input', renderLaws);
 renderLaws();
 
 function renderCycles() {
-  const query = normalizeSearch($('cycle-search').value.trim());
-  const matches = cycles.filter(cycle => normalizeSearch(`${cycle.title} ${cycle.grade} ${cycle.modules.map(module => `${module.name} ${module.course}`).join(' ')}`).includes(query));
+  const matches = filterCycles(cycles, { query: $('cycle-search').value, grade: $('cycle-grade').value, course: $('cycle-course').value, attribution: $('cycle-attribution').value });
   $('cycle-list').replaceChildren();
+  $('cycle-count').textContent = `${matches.length} títulos y ${matches.reduce((count, cycle) => count + cycle.modules.length, 0)} módulos encontrados.`;
   if (!matches.length) $('cycle-list').append(make('p', 'No se han encontrado ciclos con ese texto.', 'muted'));
   for (const cycle of matches) {
     const card = make('article', null, 'card source-list');
     card.append(make('p', cycle.grade, 'eyebrow'), make('h3', cycle.title), make('p', cycle.note));
     const list = make('ul', null, 'cycle-modules');
     for (const module of cycle.modules) list.append(make('li', `${module.name} — ${module.course}`));
-    card.append(make('strong', 'Módulos identificados para contrastar en el anexo de profesorado'), list);
+    card.append(make('strong', 'Módulos identificados para 590108 · Intervención Sociocomunitaria'), list);
     for (const source of cycle.sources) {
       const link = make('a', source.title + ' ↗');
       link.href = source.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
@@ -331,6 +346,7 @@ function renderCycles() {
   }
 }
 $('cycle-search').addEventListener('input', renderCycles);
+for (const id of ['cycle-grade', 'cycle-course', 'cycle-attribution']) $(id).addEventListener('change', renderCycles);
 renderCycles();
 
 const stageSelect = $('stage-select');

@@ -1,62 +1,62 @@
 export const legislation = [
   {
-    area: 'Acceso docente',
+    area: 'Acceso docente', scope: ['Estatal'], kind: 'Real decreto',
     title: 'Real Decreto 276/2007 · Ingreso en cuerpos docentes',
     summary: 'Regula el ingreso, acceso y adquisición de especialidades. Distingue la fase de oposición, el concurso y las prácticas; consulta el procedimiento y régimen concretos aplicables.',
     application: 'Antes de ensayar, comprueba los artículos 20 a 31 y la convocatoria que corresponda al año, cuerpo y turno.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2007-4372'
   },
   {
-    area: 'Acceso docente',
+    area: 'Acceso docente', scope: ['Extremadura'], kind: 'Convocatoria',
     title: 'Convocatoria de secundaria de Extremadura de 2025',
     summary: 'La resolución de 14 de marzo de 2025 es una referencia histórica para ingreso en secundaria y especialidades de FP. No presupone convocatoria o plazas de esta especialidad ni establece las condiciones de una convocatoria posterior.',
     application: 'Revisa bases XXVIII y XXIX, anexos y criterios del tribunal. Las instrucciones y la convocatoria futura prevalecen para el proceso que corresponda.',
     url: 'https://doe.juntaex.es/otrosFormatos/html.php?anio=2025&doe=560o&xml=2025060902'
   },
   {
-    area: 'Acceso docente',
+    area: 'Acceso docente', scope: ['Estatal'], kind: 'Orden',
     title: 'Orden de 1 de febrero de 1996 · Temarios',
     summary: 'Aprueba temarios de determinadas especialidades docentes; los anexos se publicaron en suplemento.',
     application: 'Comprueba el programa de Intervención Sociocomunitaria, el anexo y su aplicación en la convocatoria vigente. Los bloques de la app no reproducen todo el temario oficial.',
     url: 'https://www.boe.es/buscar/doc.php?id=BOE-A-1996-3102'
   },
   {
-    area: 'Educación',
+    area: 'Educación', scope: ['Estatal'], kind: 'Ley orgánica',
     title: 'Ley Orgánica 2/2006 de Educación (LOE)',
     summary: 'Marco general del sistema educativo, con las modificaciones de la Ley Orgánica 3/2020 (LOMLOE) y otras normas.',
     application: 'Relaciona principios de equidad, inclusión y funciones docentes con decisiones concretas de aula y centro; consulta el texto consolidado.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2006-7899'
   },
   {
-    area: 'Educación',
+    area: 'Educación', scope: ['Extremadura'], kind: 'Ley autonómica',
     title: 'Ley 4/2011 de educación de Extremadura',
     summary: 'Marco del modelo educativo extremeño en desarrollo de la normativa básica estatal.',
     application: 'Enmarca la propuesta en el contexto autonómico y comprueba su texto consolidado y las disposiciones que lo desarrollan.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2011-5297'
   },
   {
-    area: 'Formación profesional',
+    area: 'Formación profesional', scope: ['Estatal'], kind: 'Ley orgánica',
     title: 'Ley Orgánica 3/2022 · Ordenación e integración de la FP',
     summary: 'Ordena un sistema integrado de formación profesional con ofertas organizadas en grados A a E e itinerarios progresivos.',
     application: 'Sitúa los ciclos de grado D y los cursos de especialización de grado E sin confundirlos con el primer y segundo curso del ciclo.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2022-5139'
   },
   {
-    area: 'Formación profesional',
+    area: 'Formación profesional', scope: ['Estatal'], kind: 'Real decreto',
     title: 'Real Decreto 659/2023 · Ordenación del sistema de FP',
     summary: 'Desarrolla la organización del sistema, la evaluación y la formación en empresa u organismo equiparado.',
     application: 'Relaciona resultados de aprendizaje, criterios, instrumentos y decisiones de evaluación; contrasta el régimen de formación y la norma autonómica aplicable.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2023-16889'
   },
   {
-    area: 'Formación profesional',
+    area: 'Formación profesional', scope: ['Estatal'], kind: 'Real decreto',
     title: 'Real Decreto 278/2023 · Calendario de implantación',
     summary: 'Establece el calendario de implantación del sistema de FP de la Ley Orgánica 3/2022.',
     application: 'Comprueba la implantación efectiva y el régimen transitorio aplicable al curso y título, en lugar de mezclar sin verificar FCT y la nueva formación en empresa.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2023-9045'
   },
   {
-    area: 'Formación profesional',
+    area: 'Formación profesional', scope: ['Estatal'], kind: 'Real decreto',
     title: 'Reales decretos 499/2024 y 500/2024 · Actualización de títulos',
     summary: 'Modifican determinados reales decretos de títulos de grado medio y superior, respectivamente, para adaptarlos a la nueva ordenación.',
     application: 'Consulta el texto consolidado del título concreto y sus anexos de profesorado; estas normas no sustituyen por sí solas al currículo autonómico.',
@@ -64,35 +64,35 @@ export const legislation = [
     extra: { text: 'Real Decreto 500/2024 · grado superior', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2024-10685' }
   },
   {
-    area: 'Currículo autonómico',
+    area: 'Currículo autonómico', scope: ['Extremadura'], kind: 'Portal y documentación',
     title: 'Educarex · Currículos e instrucciones de FP',
     summary: 'Portal oficial para consultar currículos por familias y las instrucciones de adaptación a la nueva ordenación. Incluye la Instrucción 21/2025 para determinados títulos de SAN y SSC.',
     application: 'Abre la ficha del título y comprueba la instrucción y sus anexos aplicables, la distribución por curso, horas y posibles actualizaciones.',
     url: 'https://www.educarex.es/fp/curriculo-ex.html'
   },
   {
-    area: 'Inclusión',
+    area: 'Inclusión', scope: ['Estatal'], kind: 'Real decreto legislativo',
     title: 'Real Decreto Legislativo 1/2013 · Derechos de las personas con discapacidad',
     summary: 'Texto refundido de la Ley General de derechos de las personas con discapacidad y de su inclusión social.',
     application: 'Fundamenta accesibilidad universal y ajustes razonables; especifica cómo se aplicarán y evaluarán en el aula y en la formación en empresa.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2013-12632'
   },
   {
-    area: 'Inclusión',
+    area: 'Inclusión', scope: ['Estatal'], kind: 'Ley orgánica',
     title: 'Ley Orgánica 3/2007 · Igualdad efectiva de mujeres y hombres',
     summary: 'Marco estatal para la igualdad efectiva y la prevención de la discriminación por razón de sexo.',
     application: 'Relaciona la coeducación y la revisión de estereotipos con ejemplos concretos de materiales, participación y evaluación.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2007-6115'
   },
   {
-    area: 'Protección de la infancia',
+    area: 'Protección de la infancia', scope: ['Estatal'], kind: 'Ley orgánica',
     title: 'Ley Orgánica 8/2021 · Protección integral de la infancia y la adolescencia frente a la violencia',
     summary: 'Marco de protección integral frente a la violencia contra niños, niñas y adolescentes.',
     application: 'En supuestos con menores, consulta los protocolos del centro y la normativa vigente; prioriza la protección, la coordinación y la confidencialidad.',
     url: 'https://www.boe.es/buscar/act.php?id=BOE-A-2021-9347'
   },
   {
-    area: 'Protección de datos',
+    area: 'Protección de datos', scope: ['Europeo', 'Estatal'], kind: 'Reglamento y ley orgánica',
     title: 'RGPD y Ley Orgánica 3/2018',
     summary: 'Marco de protección de datos personales aplicable a documentos y procesos educativos.',
     application: 'En supuestos y programaciones usa datos ficticios o anonimizados; justifica la necesidad, la confidencialidad y los cauces del centro.',

@@ -48,3 +48,26 @@ export function validateImport(value) {
 export function normalizeSearch(text) {
   return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es');
 }
+
+export function filterLaws(laws, { area = 'all', scope = 'all', kind = 'all', query = '' } = {}) {
+  const search = normalizeSearch(query.trim());
+  return laws.filter(law => (area === 'all' || law.area === area)
+    && (scope === 'all' || law.scope.includes(scope))
+    && (kind === 'all' || law.kind === kind)
+    && normalizeSearch(`${law.title} ${law.summary} ${law.application} ${law.area} ${law.scope.join(' ')} ${law.kind} ${law.extra?.text || ''}`).includes(search));
+}
+
+export function filterCycles(cycles, { query = '', grade = 'all', course = 'all', attribution = 'all' } = {}) {
+  const search = normalizeSearch(query.trim());
+  return cycles.flatMap(cycle => {
+    if (grade !== 'all' && !cycle.grade.startsWith(grade)) return [];
+    const cycleMatch = normalizeSearch(`${cycle.title} ${cycle.grade}`).includes(search);
+    const modules = cycle.modules.filter(module => {
+      const shared = module.course.includes('atribución compartida');
+      return (course === 'all' || module.course.startsWith(course))
+        && (attribution === 'all' || (attribution === 'shared' ? shared : !shared))
+        && (cycleMatch || normalizeSearch(`${module.name} ${module.course}`).includes(search));
+    });
+    return modules.length ? [{ ...cycle, modules }] : [];
+  });
+}
