@@ -3,14 +3,24 @@ import assert from 'node:assert/strict';
 import { stages, legislation } from '../oposicion.js';
 import { lawQuestions, lawTopic } from '../legislacion-bank.js';
 import { cycles } from '../ciclos.js';
+import { officialTopics } from '../temario-oficial.js';
 
 test('hay entrenamientos específicos para todas las partes y fases previstas', () => {
-  assert.deepEqual(stages.map(stage => stage.id), ['tema', 'practico', 'programacion', 'unidad', 'debate', 'concurso', 'practicas']);
+  assert.deepEqual(stages.map(stage => stage.id), ['tema', 'practico', 'programacion', 'unidad', 'debate']);
   for (const stage of stages) {
     assert.ok(stage.title && stage.description);
     assert.ok(Number.isInteger(stage.minutes) && stage.minutes > 0 && stage.minutes <= 240);
     assert.ok(stage.prompts.length >= 2 && stage.checklist.length >= 3);
   }
+});
+
+test('el temario de la especialidad comprende 69 enunciados oficiales numerados', () => {
+  assert.equal(officialTopics.length, 69);
+  assert.equal(new Set(officialTopics).size, 69);
+  assert.ok(officialTopics.every(topic => typeof topic === 'string' && topic.length > 100));
+  assert.match(officialTopics[0], /^La intervención social:/);
+  assert.match(officialTopics[17], /^Planificación y programación de la Animación Sociocultural/);
+  assert.match(officialTopics[68], /^La relación del Técnico Superior en Integración Social/);
 });
 
 test('ciclos identificados ofrecen módulos y fuentes oficiales', () => {

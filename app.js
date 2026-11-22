@@ -1,7 +1,8 @@
 import { topics, questions, guides, sequences, cases } from './data.js?v=2';
 import { normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js';
-import { legislation, stages } from './oposicion.js';
+import { legislation, stages } from './oposicion.js?v=4';
 import { cycles } from './ciclos.js?v=3';
+import { officialTopics } from './temario-oficial.js?v=4';
 
 const $ = id => document.getElementById(id);
 const make = (tag, text, className) => {
@@ -333,6 +334,13 @@ $('cycle-search').addEventListener('input', renderCycles);
 renderCycles();
 
 const stageSelect = $('stage-select');
+const officialTopicSelect = $('official-topic-select');
+for (const [index, topic] of officialTopics.entries()) {
+  const label = topic.length > 100 ? `${topic.slice(0, 100).trimEnd()}…` : topic;
+  const option = make('option', `Tema ${index + 1} · ${label}`);
+  option.value = String(index);
+  officialTopicSelect.append(option);
+}
 for (const stage of stages) {
   const option = make('option', stage.title);
   option.value = stage.id; stageSelect.append(option);
@@ -340,6 +348,10 @@ for (const stage of stages) {
 let promptIndex = 0;
 let interval = null;
 let deadline = null;
+function showOfficialTopic() {
+  const index = Number(officialTopicSelect.value);
+  $('official-topic-text').textContent = `Tema ${index + 1}. ${officialTopics[index]}`;
+}
 function stopTimer() {
   if (interval !== null) clearInterval(interval);
   interval = null;
@@ -363,6 +375,11 @@ function showStage() {
   }
 }
 stageSelect.addEventListener('change', () => { promptIndex = 0; showStage(); });
+officialTopicSelect.addEventListener('change', showOfficialTopic);
+$('official-topic-next').addEventListener('click', () => {
+  officialTopicSelect.selectedIndex = (officialTopicSelect.selectedIndex + 1) % officialTopics.length;
+  showOfficialTopic();
+});
 $('stage-new').addEventListener('click', () => {
   const stage = stages.find(item => item.id === stageSelect.value);
   promptIndex = (promptIndex + 1) % stage.prompts.length;
@@ -392,6 +409,7 @@ $('timer-stop').addEventListener('click', () => {
   stopTimer();
   $('timer-status').textContent = 'Reloj detenido. Al iniciarlo de nuevo empieza desde el tiempo indicado.';
 });
+showOfficialTopic();
 showStage();
 $('export').addEventListener('click', () => {
   if (!storageSafe) { $('backup-status').textContent = 'La biblioteca no se ha podido leer; no se puede exportar una copia fiable.'; return; }

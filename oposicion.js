@@ -104,11 +104,11 @@ export const legislation = [
 export const stages = [
   {
     id: 'tema', title: '1.B · Desarrollo escrito del tema', minutes: 120,
-    description: 'Entrena la selección, estructura y redacción de un tema. En 2025 la referencia general extremeña dio dos horas para el tema; no anticipa las condiciones de la próxima convocatoria.',
+    description: 'Selecciona un tema del programa oficial y entrena su estructura y desarrollo escrito. En 2025 la referencia general extremeña dio dos horas para el tema; no anticipa las condiciones de la próxima convocatoria.',
     prompts: [
-      'Desarrolla un tema sobre diagnóstico y planificación sociocomunitaria: fundamentación, metodología participativa, evaluación y proyección educativa.',
-      'Desarrolla un tema sobre inclusión y acción educativa: barreras, accesibilidad, participación, apoyos y aplicación en un módulo de FP.',
-      'Elige un tema de tu propio temario oficial y realiza un esquema antes de redactar su desarrollo completo.'
+      'Desarrolla por escrito el tema oficial seleccionado, atendiendo a todos los apartados de su enunciado.',
+      'Elabora primero un esquema del tema seleccionado y después redacta su desarrollo completo.',
+      'Practica el desarrollo del tema seleccionado incorporando fundamentación y normativa actualizada que hayas contrastado.'
     ],
     checklist: ['¿He delimitado el tema y presentado un índice coherente?', '¿He fundamentado con conceptos y normativa contrastada?', '¿He desarrollado los epígrafes sin perder el hilo?', '¿He incorporado una aplicación docente y una conclusión?', '¿He revisado claridad, ortografía y referencias?']
   },
@@ -116,9 +116,9 @@ export const stages = [
     id: 'practico', title: '1.A · Supuesto práctico', minutes: 135,
     description: 'Resuelve una situación profesional y justifica tus decisiones. En 2025 se fijaron 2 h 15 min con carácter general, salvo instrucciones de la comisión; formato y duración futuros deben confirmarse.',
     prompts: [
-      'En un ciclo de Integración Social, el grupo diseña un proyecto para jóvenes con baja participación en un barrio rural. Propón un diagnóstico, coordinación, intervención inclusiva, indicadores y evaluación; explica cómo trasladarías el caso al aula.',
-      'En un módulo de Educación Infantil se plantea una actividad con familias diversas y barreras de comunicación. Diseña la intervención, apoyos accesibles, coordinación y evaluación, justificando las decisiones docentes.',
-      'Una alumna de FP encuentra barreras durante su formación en una entidad. Diseña una respuesta coordinada, respetuosa con su autonomía y datos personales, indicando qué consultarías en el plan formativo y normas vigentes.'
+      'Plantea una situación profesional vinculada al tema seleccionado. Identifica necesidades y agentes y justifica una intervención inclusiva, su seguimiento y evaluación.',
+      'Diseña un caso práctico relacionado con el tema seleccionado y explica cómo coordinarías los recursos, profesionales y apoyos necesarios.',
+      'A partir del tema seleccionado, inventa un supuesto de intervención, identifica sus límites y fundamenta la respuesta con fuentes y normativa contrastadas.'
     ],
     checklist: ['¿He identificado datos, necesidades y agentes sin inventar hechos?', '¿He justificado objetivos, metodología y medidas inclusivas?', '¿He secuenciado acciones y recursos viables?', '¿He indicado evaluación, seguimiento y coordinación?', '¿He citado las fuentes aplicables y protegido datos personales?']
   },
@@ -126,9 +126,9 @@ export const stages = [
     id: 'programacion', title: '2.A · Programación y defensa', minutes: 30,
     description: 'Prepara una programación de un módulo atribuible a la especialidad y ensaya su defensa. La duración es editable y orientativa; verifica requisitos formales y tiempos en la convocatoria aplicable.',
     prompts: [
-      'Elige un módulo atribuible de Integración Social y construye el hilo conductor de una programación para un grupo y centro ficticios de Extremadura.',
-      'Selecciona un módulo atribuible de Educación Infantil y explica cómo conectas su currículo, resultados de aprendizaje, actividades y evaluación.',
-      'Defiende cómo tu programación adapta la enseñanza a un grupo heterogéneo y coordina la formación en centro y en empresa.'
+      'Relaciona el tema seleccionado con un módulo atribuible a la especialidad. Tras comprobar el currículo, construye el hilo conductor de una programación para un centro ficticio.',
+      'Para el tema seleccionado, identifica un módulo atribuible y explica cómo conectarías su currículo, resultados de aprendizaje, actividades y evaluación.',
+      'A partir del tema seleccionado, defiende cómo una programación de un módulo atribuible atiende a un grupo diverso y coordina la formación en centro y empresa.'
     ],
     checklist: ['¿He seleccionado módulo, curso y normativa aplicable comprobados?', '¿He contextualizado el centro, grupo y necesidades?', '¿Hay coherencia entre resultados, criterios, actividades e instrumentos?', '¿He previsto inclusión, evaluación y coordinación con la empresa?', '¿He comprobado estructura y requisitos formales de la convocatoria?']
   },
@@ -136,9 +136,9 @@ export const stages = [
     id: 'unidad', title: '2.B · Unidad de trabajo y exposición', minutes: 30,
     description: 'Diseña y explica una unidad de trabajo de FP. En la referencia de 2025 se preveía preparación durante una hora y exposición de hasta 30 minutos; confirma condiciones, recursos y tiempos actuales.',
     prompts: [
-      'Diseña una unidad sobre escucha activa y entrevista para un módulo atribuible, vinculándola a resultados de aprendizaje y criterios de evaluación reales.',
-      'Prepara una unidad sobre planificación de una intervención comunitaria con una actividad colaborativa, adaptaciones y evidencias evaluables.',
-      'Expón una unidad sobre prevención de barreras en un entorno socioeducativo, incluyendo instrumentos, retroalimentación y coordinación.'
+      'Diseña una unidad relacionada con el tema seleccionado en un módulo atribuible, vinculándola a resultados de aprendizaje y criterios de evaluación reales.',
+      'Prepara una unidad vinculada al tema seleccionado con una actividad colaborativa, adaptaciones y evidencias evaluables; verifica el currículo del módulo.',
+      'Expón una unidad relacionada con el tema seleccionado, incluyendo instrumentos, retroalimentación y coordinación, tras comprobar el módulo atribuible.'
     ],
     checklist: ['¿He identificado el módulo y verificado sus resultados y criterios?', '¿He concretado secuencia, tiempos, recursos y agrupamientos?', '¿He justificado accesibilidad y apoyos?', '¿He explicado qué evidencias recogeré y cómo evaluaré?', '¿He practicado la exposición y ajustado el tiempo?']
   },
@@ -146,28 +146,10 @@ export const stages = [
     id: 'debate', title: '2.B · Preguntas del tribunal', minutes: 10,
     description: 'Entrena respuestas claras y fundamentadas tras la exposición. El debate de hasta 10 minutos figura en la convocatoria de referencia de 2025, no es una garantía para futuros procesos.',
     prompts: [
-      '¿Cómo comprobarías que la evaluación es coherente con los resultados de aprendizaje y los criterios del módulo?',
-      '¿Qué harías si una actividad o una estancia en empresa presenta barreras de accesibilidad?',
-      '¿Cómo responderías si un resultado de aprendizaje no se alcanza con la actividad prevista?'
+      'En una unidad relacionada con el tema seleccionado, ¿cómo comprobarías que la evaluación es coherente con los resultados de aprendizaje y criterios del módulo?',
+      'En una actividad relacionada con el tema seleccionado, ¿cómo responderías ante barreras de accesibilidad?',
+      '¿Cómo justificarías ante el tribunal la conexión entre el tema seleccionado, un módulo atribuible y las decisiones de tu unidad?'
     ],
     checklist: ['¿He respondido primero a la pregunta formulada?', '¿He fundamentado sin citar artículos de memoria si no estoy segura?', '¿He dado un ejemplo concreto de aula o de coordinación?', '¿He reconocido límites y explicado qué norma o documento consultaría?']
-  },
-  {
-    id: 'concurso', title: 'Concurso · Revisión de méritos', minutes: 20,
-    description: 'El concurso no es un examen práctico. Usa este ejercicio como lista de revisión; baremos, fechas de corte y documentación dependen de la convocatoria y del turno.',
-    prompts: [
-      'Revisa tu experiencia docente, formación académica y otros méritos. Organiza los documentos justificativos y anota qué requisitos y fechas debes contrastar.',
-      'Elige un mérito y comprueba cómo se acredita, quién expide el documento y si cumple el baremo y el plazo de la convocatoria.'
-    ],
-    checklist: ['¿He consultado el baremo oficial concreto y su fecha de corte?', '¿He separado titulaciones requeridas de posibles méritos baremables?', '¿He revisado certificados y documentación exigida?', '¿He anotado plazos, trámite y justificante de presentación?']
-  },
-  {
-    id: 'practicas', title: 'Fase de prácticas · Preparación docente', minutes: 20,
-    description: 'Tras la selección, la fase de prácticas se rige por su resolución e instrucciones. Este ejercicio anticipa la reflexión docente, no sustituye sus requisitos oficiales.',
-    prompts: [
-      'Imagina tu incorporación a un departamento de Servicios Socioculturales: planifica las primeras semanas de coordinación, diagnóstico del grupo y revisión de documentos del centro.',
-      'Tras una actividad con resultados desiguales, redacta una reflexión sobre evidencias, apoyos, ajustes y coordinación con tu tutoría de prácticas.'
-    ],
-    checklist: ['¿He identificado documentos y profesionales con quienes coordinarme?', '¿He previsto seguimiento y reflexión sobre la práctica?', '¿He incorporado inclusión, convivencia y confidencialidad?', '¿He consultado la resolución específica de prácticas cuando exista?']
   }
 ];
