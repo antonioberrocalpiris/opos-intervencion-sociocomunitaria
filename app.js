@@ -1,7 +1,7 @@
 import { topics, questions, guides, sequences, cases } from './data.js?v=2';
 import { normalizeSearch, scoreQuestions, selectQuestions, shuffle, validateImport } from './logic.js';
 import { legislation, stages } from './oposicion.js';
-import { cycles } from './ciclos.js';
+import { cycles } from './ciclos.js?v=3';
 
 const $ = id => document.getElementById(id);
 const make = (tag, text, className) => {

@@ -7,7 +7,7 @@ const submit = document.getElementById('access-submit');
 
 async function openApplication() {
   try {
-    await import('./app.js?v=2');
+    await import('./app.js?v=3');
     document.getElementById('access-screen').hidden = true;
     document.getElementById('application').hidden = false;
   } catch (cause) {

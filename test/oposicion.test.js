@@ -14,14 +14,36 @@ test('hay entrenamientos específicos para todas las partes y fases previstas', 
 });
 
 test('ciclos identificados ofrecen módulos y fuentes oficiales', () => {
-  assert.equal(cycles.length, 8);
+  assert.equal(cycles.length, 13);
   assert.equal(new Set(cycles.map(cycle => cycle.title)).size, cycles.length);
   for (const cycle of cycles) {
     assert.ok(cycle.title && cycle.grade && cycle.note);
     assert.ok(cycle.modules.length >= 2);
     assert.ok(cycle.modules.every(module => module.name && module.course));
     assert.ok(cycle.sources.some(source => source.url.startsWith('https://www.boe.es/')));
+    assert.ok(cycle.sources.some(source => source.url.startsWith('https://todofp.es/') && source.url.endsWith('/atribucion-docente.html')));
     assert.ok(cycle.sources.some(source => source.url === 'https://www.educarex.es/fp/curriculo-ex.html'));
+  }
+});
+
+test('atribuciones compartidas y secuenciación se mantienen por título', () => {
+  const find = title => cycles.find(cycle => cycle.title === title);
+  const moduleFor = (cycle, code) => cycle.modules.find(module => module.name.startsWith(`${code} ·`));
+  const equestrian = find('Actividades Ecuestres');
+  const guide = find('Guía en el Medio Natural y de Tiempo Libre');
+  assert.match(moduleFor(equestrian, '1328').course, /2.º · 80 horas; atribución compartida/);
+  assert.equal(moduleFor(guide, '1328'), undefined);
+  assert.match(moduleFor(guide, '1664').course, /1.º · 30 horas/);
+  assert.match(moduleFor(equestrian, '1708').course, /2.º · 30 horas/);
+  assert.match(moduleFor(find('Integración Social'), '1665').course, /1.º · 30 horas/);
+  assert.match(moduleFor(find('Animación Sociocultural y Turística'), '1665').course, /2.º · 30 horas/);
+  assert.match(moduleFor(find('Enseñanza y Animación Sociodeportiva'), '1124').course, /2.º · 130 horas/);
+  assert.match(moduleFor(find('Acondicionamiento Físico'), '0017').course, /2.º · 130 horas/);
+  assert.match(moduleFor(find('Educación y Control Ambiental'), '0791').course, /pendiente de localizar/);
+  for (const cycle of cycles) {
+    assert.ok(cycle.modules.some(module => /Proyecto intermodular/i.test(module.name)));
+    assert.ok(cycle.modules.some(module => module.name.startsWith('1708 ·')));
+    assert.ok(cycle.modules.some(module => /^166[45] ·/.test(module.name)));
   }
 });
 
